@@ -1,0 +1,49 @@
+// Импорт Bootstrap
+@import "~bootstrap/scss/functions"; // Обязательно импортируем функции
+@import "~bootstrap/scss/variables"; // Импортируем переменные Bootstrap
+@import "~bootstrap/scss/mixins"; // Импортируем миксины
+@import "./fonts";
+
+// Переопределение переменных Bootstrap
+
+// Цвета
+$primary: #FFFFFF;
+$secondary: #EFEEF1; 
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #A12A29;
+$light: #f8f9fa;
+$dark: #000000;
+$green: #BAED43;
+$green-dark: #668C0D;
+$blue: #155EEF;
+$red: #FF1B06;
+$gray: #EBEBF5;
+$yellow: #FECA1F;
+$dark-alternative: #0A0A0B;
+$text-primary: #181D27;
+$text-secondary: #535862;
+$text-black: #000000;
+$text-light: #717680;
+$text-headers: #252B37;
+$text-panel-header: #414651;
+$border: #E9EAEB;
+
+// Переопределение цветовой палитры
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+);
+
+// Типография
+$font-family-sans-serif: 'Inter', sans-serif;
+$font-family-monospace: "Inter", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; // Моноширинный шрифт
+$font-size-base: 1rem; // Базовый размер шрифта
+$line-height-base: 1.5; // Базовая высота строки

@@ -1,0 +1,51 @@
+@import "../../src/scss/main";
+
+.main {
+  background: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 80px; 
+  position: relative;
+}
+
+.main__container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 24px 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.cart-icon {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  font-size: 28px;
+  color: #212529;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    transform: scale(1.1);
+    color: #0d6efd;
+  }
+
+  .cart-icon__icon {
+    margin-right: 5px;
+  }
+
+  .cart-icon__count {
+    background: #dc3545;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 6px;
+    border-radius: 50%;
+    margin-left: 4px;
+  }
+}

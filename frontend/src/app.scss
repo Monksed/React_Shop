@@ -1,0 +1,83 @@
+@import "../src/scss/main";
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+  #up {
+    padding-top: 60px;
+  }
+}
+* {
+  scrollbar-width: none;
+  user-select: none;
+  img {
+    pointer-events: none;
+  }
+}
+$body-bg: $secondary;
+$body-color: $text-primary;
+
+body, #root {
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+  scrollbar-width: none;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+a, div, p, h6, h5, h4, h3, h2, h1, span {
+  color: $text-primary;
+}
+// Импорт остальных стилей Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+.auth-loader {
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  z-index: 200;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .logo {
+    animation: logoLoad 8s infinite ease-in-out;
+    width: 200px;
+    height: 200px;
+  }
+
+  @keyframes logoLoad {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+.loader-container {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(0,0,0,.1);
+    border-top-color: rgba(0,0,0,.6);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+}
+
