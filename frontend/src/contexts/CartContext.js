@@ -18,11 +18,7 @@ export const CartProvider = ({ children }) => {
         alert("Товар добавлен в корзину");
       }
     } catch (e) {
-      if (e.response?.status === 400) {
-        alert("Товара нет в наличии");
-      } else {
-        alert("Ошибка при добавлении товара");
-      }
+      alert("Ошибка при добавлении товара");
     }
   };
 

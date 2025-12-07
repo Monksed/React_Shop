@@ -25,7 +25,11 @@ const MainPage = () => {
     const loadProducts = async () => {
       try {
         const response = await axios.get('http://localhost:5023/api/Product/All');
-        setProducts(response.data);
+        const productsWithQuantity = response.data.map(p => ({
+          ...p,
+          quantity: 1
+        }));
+        setProducts(productsWithQuantity);
       } catch (error) {
         console.error("Ошибка при загрузке товаров:", error);
       } finally {
@@ -49,11 +53,11 @@ const MainPage = () => {
             key={product.id}
             id={product.id}
             image={product.image}
-            title={product.title}
+            name={product.name}
             description={product.description}
             price={product.price}
             quantity={product.quantity}
-            bonus={Math.floor(product.price * 0.1)}
+            bonus={product.bonus}
             onAddToCart={addToCart}
           />
         ))}

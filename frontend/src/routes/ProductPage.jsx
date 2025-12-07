@@ -12,7 +12,10 @@ const ProductPage = () => {
     const loadProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:5023/api/Product/One/${id}`);
-        setProduct(response.data);
+        setProduct({
+          ...response.data,
+          quantity: 1
+        });
       } catch (error) {
         console.error("Ошибка при загрузке товара:", error);
       } finally {
@@ -29,15 +32,17 @@ const ProductPage = () => {
   return (
     <div className="product-page">
       <div className="product-page__card">
-        <img src={`/images/${product.image}`} alt={product.title}
+        <img
+          src={`http://localhost:5023/images/${product.image}`}
+          alt={product.name}
           className="product-page__image"
         />
         <div className="product-page__info">
-          <h2>{product.title}</h2>
+          <h2>{product.name}</h2>
           <p className="product-page__desc">{product.description}</p>
           <p className="product-page__price">Цена: {product.price} ₽</p>
           <p className={`product-page__stock ${product.quantity > 0 ? 'in' : 'out'}`}>
-            {product.quantity > 0 ? 'В наличии' : 'Распродано'} 
+            {product.quantity > 0 ? 'В наличии' : 'Распродано'}
           </p>
         </div>
       </div>
