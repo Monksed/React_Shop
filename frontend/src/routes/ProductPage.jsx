@@ -1,17 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "./ProductPage.scss";
+import { useBackButtonManager } from "../contexts/BackButtonContext";
+import { miniApp } from "@telegram-apps/sdk-react";
 
 const ProductPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [isLoad, setIsLoad] = useState(true);
+  const navigate = useNavigate();
+  const { action, clear } = useBackButtonManager();
+
+
+  useEffect(() => {
+    window.scrollTo(0,0);
+    miniApp.setBackgroundColor('#FFFFFF');
+    miniApp.setHeaderColor('#FFFFFF');
+    action(() => navigate("/"));
+    return () => {
+      clear();
+    };
+  }, );
 
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5023/api/Product/One/${id}`);
+        const response = await axios.get(`https://localhost:5023/api/Product/One/${id}`);
         setProduct({
           ...response.data,
           quantity: 1
@@ -33,7 +48,7 @@ const ProductPage = () => {
     <div className="product-page">
       <div className="product-page__card">
         <img
-          src={`http://localhost:5023/images/${product.image}`}
+          src={`https://localhost:5023/images/${product.image}`}
           alt={product.name}
           className="product-page__image"
         />

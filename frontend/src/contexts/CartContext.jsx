@@ -12,7 +12,7 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = async (productId) => {
     try {
-      const response = await axios.post(`http://localhost:5023/api/Product/Buy/${productId}`);
+      const response = await axios.post(`https://localhost:5023/api/Product/Buy/${productId}`);
       if (response.status === 200) {
         setCartCount(prev => prev + 1);
         alert("Товар добавлен в корзину");

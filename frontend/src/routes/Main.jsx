@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import { useCart } from '../contexts/CartContext';
+import { useBackButtonManager } from '../contexts/BackButtonContext';
 import './Main.scss';
 import { FaShoppingCart } from "react-icons/fa";
 import axios from 'axios';
@@ -20,11 +21,12 @@ const MainPage = () => {
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
   const [isLoad, setIsLoad] = useState(true);
+  const { clear } = useBackButtonManager();
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5023/api/Product/All');
+        const response = await axios.get('https://localhost:5023/api/Product/All');
         const productsWithQuantity = response.data.map(p => ({
           ...p,
           quantity: 1
@@ -38,7 +40,8 @@ const MainPage = () => {
     };
 
     loadProducts();
-  }, []);
+    clear();
+  }, );
 
   if (isLoad) {
     return <div className="product-card loading"><p>Загрузка...</p></div>;

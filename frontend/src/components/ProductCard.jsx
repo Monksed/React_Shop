@@ -23,7 +23,7 @@ const ProductCard = ({ id, image, name, price, quantity, bonus, onAddToCart }) =
   return (
     <div className="product-card">
       <div className="product-image" onClick={handleOpenProduct}>
-        <img src={`http://localhost:5023/images/${image}`} alt={name} />
+        <img src={`https://localhost:5023/images/${image}`} alt={name} />
         <span className="bonus-count">{bonus} ₽</span>
       </div>
       <div className="product-details">
