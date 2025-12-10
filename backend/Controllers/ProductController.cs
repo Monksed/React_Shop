@@ -1,6 +1,8 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using ShopBackend.Helpers;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using CoreData.Contexts;
+using CoreData.Models;
+using ShopBackend.Dto;
 
 namespace ShopBackend.Controllers
 {
@@ -8,37 +10,62 @@ namespace ShopBackend.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        [HttpGet("One/{id}")]
-        public IActionResult GetOneProducts(int id)
+        private readonly React_ShopContext _context;
+
+        public ProductController(React_ShopContext context)
         {
-            var product = FakeDatabase._products.FirstOrDefault(x => x.Id == id);
-            if (product == null)
-            {
-                return NotFound(new { message = "Товар не найден" });
-            }
-            return Ok(product);
+            _context = context;
         }
-        [HttpPost("Buy/{id}")]
-        public IActionResult BuyProduct(int id)
+
+        [HttpGet("One/{id}")]
+        public async Task<IActionResult> GetOneProduct(Guid id)
         {
-            var product = FakeDatabase._products.FirstOrDefault(x => x.Id == id);
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+
             if (product == null)
-            {
                 return NotFound(new { message = "Товар не найден" });
-            }
-            if (product.Quantity <= 0)
+
+            var dto = new ProductDto
             {
-                return BadRequest(new { message = "Нет в наличии" });
-            }
-            product.Quantity -= 1;
-            return Ok(new { message = "Товар куплен", product });
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Image = product.Image,
+                Bonus = product.Bonus,
+                BrandId = product.BrandId
+            };
+
+            return Ok(dto);
         }
 
         [HttpGet("All")]
-        public IActionResult GetAllProduct()
+        public async Task<IActionResult> GetAllProducts()
         {
-            var listProducts = FakeDatabase._products.ToList();
+            var listProducts = await _context.Products
+                .Select(product => new ProductDto
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Image = product.Image,
+                    Bonus = product.Bonus,
+                    BrandId = product.BrandId
+                })
+                .ToListAsync();
+
             return Ok(listProducts);
+        }
+        [HttpPost("Buy/{id}")]
+        public async Task<IActionResult> BuyProduct(Guid id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+                return NotFound(new { message = "Товар не найден" });
+
+            //TODO Логика покупки/добавления в корзину
+
+            return Ok(new { message = "Товар успешно добавлен в корзину", productId = id });
         }
     }
 }

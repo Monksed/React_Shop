@@ -1,8 +1,12 @@
 import { useParams,useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useCart } from '../contexts/CartContext';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "./ProductPage.scss";
+import { useBackButtonManager } from "../contexts/BackButtonContext";
+import { miniApp } from "@telegram-apps/sdk-react";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -20,12 +24,28 @@ const ProductPage = () => {
 
   const sizes = [36, 36.5, 37, 38, 39, 40, 41];
   const touchStartX = useRef(0);
+  const navigate = useNavigate();
+  const { action, clear } = useBackButtonManager();
+
+
+  useEffect(() => {
+    window.scrollTo(0,0);
+    miniApp.setBackgroundColor('#FFFFFF');
+    miniApp.setHeaderColor('#FFFFFF');
+    action(() => navigate("/"));
+    return () => {
+      clear();
+    };
+  }, );
 
   useEffect(() => {
     const loadProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5023/api/Product/One/${id}`);
-        setProduct(response.data);
+        const response = await axios.get(`https://localhost:5023/api/Product/One/${id}`);
+        setProduct({
+          ...response.data,
+          quantity: 1
+        });
       } catch (error) {
         console.error("Ошибка при загрузке товара:", error);
       } finally {

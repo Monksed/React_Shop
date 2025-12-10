@@ -1,6 +1,7 @@
 import  { useState, useEffect, useMemo } from 'react';
 import ProductCard from '../components/ProductCard';
 import { useCart } from '../contexts/CartContext';
+import { useBackButtonManager } from '../contexts/BackButtonContext';
 import './Main.scss';
 import { FaShoppingCart } from "react-icons/fa";
 import axios from 'axios';
@@ -20,6 +21,7 @@ const MainPage = () => {
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
   const [isLoad, setIsLoad] = useState(true);
+  const { clear } = useBackButtonManager();
 
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,8 +50,12 @@ const MainPage = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5023/api/Product/All');
-        setProducts(response.data);
+        const response = await axios.get('https://localhost:5023/api/Product/All');
+        const productsWithQuantity = response.data.map(p => ({
+          ...p,
+          quantity: 1
+        }));
+        setProducts(productsWithQuantity);
       } catch (error) {
         console.error("Ошибка при загрузке товаров:", error);
       } finally {
@@ -57,7 +63,8 @@ const MainPage = () => {
       }
     };
     loadProducts();
-  }, []);
+    clear();
+  }, );
 
   if (isLoad) {
     return <div className="loading">Загрузка...</div>;
