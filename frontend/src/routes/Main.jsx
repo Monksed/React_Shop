@@ -140,6 +140,31 @@ const MainPage = () => {
           ))
         )}
       </div>
+
+<section className="brands-big">
+  <h2 className="brands-big__title">Бренды кроссовок</h2>
+
+  <div className="brands-big__grid">
+    {[
+      "Nike", "Jordan", "Adidas", "Yeezy",
+      "New Balance", "Puma", "Asics", "Vans",
+      "Off-White", "Balenciaga", "Gucci", "Versace"
+    ].map((brand) => (
+      <button
+        key={brand}
+        className="brand-big"
+        onClick={() => console.log(`Выбран бренд: ${brand}`)}
+      >
+        <img
+          src={`https://via.placeholder.com/200/ffffff/000000?text=${brand}`}
+          alt={brand}
+          className="brand-big__logo"
+        />
+      </button>
+    ))}
+  </div>
+</section>
+
     </div>
   );
 };

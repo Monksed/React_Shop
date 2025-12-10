@@ -156,7 +156,7 @@ const ProductPage = () => {
 
 <div className="product-page__qa">
 
-          {/* Страховка и безопасность */}
+
           <div className="qa-item">
             <button 
               className="qa-question"
@@ -182,7 +182,7 @@ const ProductPage = () => {
             )}
           </div>
 
-          {/* Доставка */}
+ 
           <div className="qa-item">
             <button 
               className="qa-question"

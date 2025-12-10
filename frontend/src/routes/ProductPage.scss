@@ -110,7 +110,7 @@
       color: #000;
     }
     p {
-      font-size: 14px;
+      font-size: 24px;
       color: #555;
       line-height: 1.6;
       margin: 0;
@@ -157,7 +157,7 @@
   }
 
   svg {
-    margin-left: -2px; // чуть сдвигаем стрелку влево, как в оригинале
+    margin-left: -2px;
   }
 }
 }
@@ -195,8 +195,8 @@
 .product-tips__track::-webkit-scrollbar { display: none; }
 
 .product-tip-card {
-  flex: 0 0 132px;           /* ← компактный размер */
-  height: 82px;              /* ← маленькая высота */
+  flex: 0 0 132px;           
+  height: 82px;             
   border-radius: 12px;
   overflow: hidden;
   position: relative;
@@ -247,7 +247,7 @@
   cursor: pointer;
   text-align: left;
   font-size: 18px;
-  font-weight: 800;           /* ЖИРНЕЕ НЕ БЫВАЕТ */
+  font-weight: 800;          
   color: #000;
   letter-spacing: -0.3px;
 }
@@ -280,7 +280,7 @@ font-weight: 400;
   padding: 0 0 28px 0;
   font-size: 15.5px;
   line-height: 1.7;
-  font-weight: 500;           /* тоже жирненько */
+  font-weight: 500;       
   color: #222;
   animation: show 0.4s ease;
 
