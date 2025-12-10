@@ -6,8 +6,10 @@ public class UserDTO
     public string? Username { get; set; }
     public long? Score { get; set; }
     public string? Fio { get; set; }
+    public string? Address { get; set; }
     public string? Email { get; set; }
     public string? Phone { get; set; }
+    public string? Image { get; set; }
 }
 
 

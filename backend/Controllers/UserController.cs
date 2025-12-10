@@ -43,6 +43,8 @@ namespace ShopBackend.Controllers
             user.Email = dto.Email;
             user.Phone = dto.Phone;
             user.Fio = dto.Fio;
+            user.Adress = dto.Address;
+            user.Image = dto.Image;
             user.Username = dto.Username;
             user.UpdateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
 
