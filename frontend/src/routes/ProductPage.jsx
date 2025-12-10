@@ -1,8 +1,6 @@
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { useCart } from '../contexts/CartContext';
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "./ProductPage.scss";
 import { useBackButtonManager } from "../contexts/BackButtonContext";
@@ -12,9 +10,9 @@ const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [qaOpen, setQaOpen] = useState({
-  insurance: false,
-  delivery: false
-});
+    insurance: false,
+    delivery: false
+  });
 
   const [product, setProduct] = useState(null);
   const [isLoad, setIsLoad] = useState(true);
@@ -24,19 +22,18 @@ const ProductPage = () => {
 
   const sizes = [36, 36.5, 37, 38, 39, 40, 41];
   const touchStartX = useRef(0);
-  const navigate = useNavigate();
   const { action, clear } = useBackButtonManager();
 
 
   useEffect(() => {
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
     miniApp.setBackgroundColor('#FFFFFF');
     miniApp.setHeaderColor('#FFFFFF');
     action(() => navigate("/"));
     return () => {
       clear();
     };
-  }, );
+  }, [action, clear, navigate]);
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -150,78 +147,78 @@ const ProductPage = () => {
           <p>{product.description}</p>
         </div>
 
-<section className="product-tips">
+        <section className="product-tips">
 
-  <div className="product-tips__track">
-    {[
-      "Как почистить белую подошву",
-      "С чем носить эти кроссы",
-      "Как отличить оригинал",
-      "ТОП-5 похожих моделей",
-      "Гайд по размерам",
-      "Можно ли стирать",
-      "Лайфхаки от реселлеров",
-      "История модели",
-    ].map((tip, i) => (
-      <div key={i} className="product-tip-card">
-        <img
-          src={`https://via.placeholder.com/300x200/0a0a0a/ffffff?text=Совет+${i+1}`}
-          alt=""
-        />
-        <div className="product-tip-title">{tip}</div>
-      </div>
-    ))}
-  </div>
-</section>
+          <div className="product-tips__track">
+            {[
+              "Как почистить белую подошву",
+              "С чем носить эти кроссы",
+              "Как отличить оригинал",
+              "ТОП-5 похожих моделей",
+              "Гайд по размерам",
+              "Можно ли стирать",
+              "Лайфхаки от реселлеров",
+              "История модели",
+            ].map((tip, i) => (
+              <div key={i} className="product-tip-card">
+                <img
+                  src={`https://via.placeholder.com/300x200/0a0a0a/ffffff?text=Совет+${i + 1}`}
+                  alt=""
+                />
+                <div className="product-tip-title">{tip}</div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-<div className="product-page__qa">
+        <div className="product-page__qa">
 
 
           <div className="qa-item">
-            <button 
+            <button
               className="qa-question"
               onClick={() => setQaOpen(prev => ({ ...prev, insurance: !prev.insurance }))}
             >
               <span>Страховка и безопасность</span>
               <div className={`qa-chevron ${qaOpen.insurance ? 'open' : ''}`}>
                 <svg viewBox="0 0 24 24" width="32" height="32">
-                  <path d="M7 10L12 15L17 10" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M7 10L12 15L17 10" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
             </button>
             {qaOpen.insurance && (
               <div className="qa-answer">
                 <p>
-                  100% оригинал — проверка перед отправкой.<br/>
-                  Подделка = возврат ×3.<br/>
-                  Фирменный бокс + все пломбы и бирки.<br/>
-                  Страховка Poizon/Dewu (если через нас).<br/>
+                  100% оригинал — проверка перед отправкой.<br />
+                  Подделка = возврат ×3.<br />
+                  Фирменный бокс + все пломбы и бирки.<br />
+                  Страховка Poizon/Dewu (если через нас).<br />
                   Возврат 14 дней.
                 </p>
               </div>
             )}
           </div>
 
- 
+
           <div className="qa-item">
-            <button 
+            <button
               className="qa-question"
               onClick={() => setQaOpen(prev => ({ ...prev, delivery: !prev.delivery }))}
             >
               <span>Доставка и оплата</span>
               <div className={`qa-chevron ${qaOpen.delivery ? 'open' : ''}`}>
                 <svg viewBox="0 0 24 24" width="32" height="32">
-                  <path d="M7 10L12 15L17 10" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M7 10L12 15L17 10" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
             </button>
             {qaOpen.delivery && (
               <div className="qa-answer">
                 <p>
-                  СДЭК / Boxberry / Почта — выбирай любой.<br/>
-                  Бесплатно от 15 000 ₽.<br/>
-                  Москва-СПб: 1–2 дня · Регионы: 3–7 дней.<br/>
-                  Трек сразу после отправки.<br/>
+                  СДЭК / Boxberry / Почта — выбирай любой.<br />
+                  Бесплатно от 15 000 ₽.<br />
+                  Москва-СПб: 1–2 дня · Регионы: 3–7 дней.<br />
+                  Трек сразу после отправки.<br />
                   Оплата онлайн или при получении.
                 </p>
               </div>
@@ -240,7 +237,7 @@ const ProductPage = () => {
               }
               addToCart({
                 id: product.id,
-                title: product.title,
+                name: product.name,
                 price: product.price,
                 image: product.image || product.images?.[0],
                 selectedSize: selectedSize || 'Не выбран'

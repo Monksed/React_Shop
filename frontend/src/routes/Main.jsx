@@ -1,4 +1,4 @@
-import  { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import ProductCard from '../components/ProductCard';
 import { useCart } from '../contexts/CartContext';
 import { useBackButtonManager } from '../contexts/BackButtonContext';
@@ -50,7 +50,7 @@ const MainPage = () => {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await axios.get('https://localhost:5023/api/Product/All');
+        const response = await axios.get(`https://localhost:5023/api/Product/All`);
         const productsWithQuantity = response.data.map(p => ({
           ...p,
           quantity: 1
@@ -64,7 +64,7 @@ const MainPage = () => {
     };
     loadProducts();
     clear();
-  }, );
+  },);
 
   if (isLoad) {
     return <div className="loading">Загрузка...</div>;
@@ -74,7 +74,7 @@ const MainPage = () => {
     <div className="main">
       <CartIcon />
 
- 
+
       <section className="news-slider">
         <div className="news-track">
           {[
@@ -88,7 +88,7 @@ const MainPage = () => {
             "Новое поступление Off-White",
           ].map((text, i) => (
             <div key={i} className="news-card">
-              <img src={`https://via.placeholder.com/320x180/0a0a0a/ffffff?text=${i+1}`} alt="" />
+              <img src={`https://via.placeholder.com/320x180/0a0a0a/ffffff?text=${i + 1}`} alt="" />
               <div className="news-title">{text}</div>
             </div>
           ))}
@@ -137,40 +137,40 @@ const MainPage = () => {
               key={product.id}
               id={product.id}
               image={product.image}
-              title={product.title}
+              name={product.name}
               description={product.description}
               price={product.price}
               quantity={product.quantity}
-              bonus={Math.floor(product.price * 0.1)}
+              bonus={product.bonus}
               onAddToCart={addToCart}
             />
           ))
         )}
       </div>
 
-<section className="brands-big">
-  <h2 className="brands-big__title">Бренды кроссовок</h2>
+      <section className="brands-big">
+        <h2 className="brands-big__title">Бренды кроссовок</h2>
 
-  <div className="brands-big__grid">
-    {[
-      "Nike", "Jordan", "Adidas", "Yeezy",
-      "New Balance", "Puma", "Asics", "Vans",
-      "Off-White", "Balenciaga", "Gucci", "Versace"
-    ].map((brand) => (
-      <button
-        key={brand}
-        className="brand-big"
-        onClick={() => console.log(`Выбран бренд: ${brand}`)}
-      >
-        <img
-          src={`https://via.placeholder.com/200/ffffff/000000?text=${brand}`}
-          alt={brand}
-          className="brand-big__logo"
-        />
-      </button>
-    ))}
-  </div>
-</section>
+        <div className="brands-big__grid">
+          {[
+            "Nike", "Jordan", "Adidas", "Yeezy",
+            "New Balance", "Puma", "Asics", "Vans",
+            "Off-White", "Balenciaga", "Gucci", "Versace"
+          ].map((brand) => (
+            <button
+              key={brand}
+              className="brand-big"
+              onClick={() => console.log(`Выбран бренд: ${brand}`)}
+            >
+              <img
+                src={`https://via.placeholder.com/200/ffffff/000000?text=${brand}`}
+                alt={brand}
+                className="brand-big__logo"
+              />
+            </button>
+          ))}
+        </div>
+      </section>
 
     </div>
   );
