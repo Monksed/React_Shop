@@ -54,8 +54,8 @@ public class UserController : ControllerBase
                 Fio = request.Fio,
                 Score = 0,
                 IsActive = true,
-                CreateDate = DateTime.Now,
-                UpdateDate = DateTime.Now
+                CreateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
+                UpdateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
             };
             _context.Users.Add(user);
         }
@@ -63,7 +63,7 @@ public class UserController : ControllerBase
         {
             user.Username = request.Username ?? user.Username;
             user.Fio = request.Fio ?? user.Fio;
-            user.UpdateDate = DateTime.Now;
+            user.UpdateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
         }
 
         await _context.SaveChangesAsync();
@@ -88,7 +88,7 @@ public class UserController : ControllerBase
         user.Phone = dto.Phone ?? user.Phone;
         user.Adress = dto.Address ?? user.Adress;
         user.Image = dto.Image ?? user.Image;
-        user.UpdateDate = DateTime.Now;
+        user.UpdateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
 
         await _context.SaveChangesAsync();
         return Ok(MapToDto(user));
