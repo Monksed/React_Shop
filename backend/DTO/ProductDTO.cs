@@ -1,6 +1,6 @@
 namespace ShopBackend.DTO;
 
-public class ProductDto
+public class ProductDTO
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoreData.Contexts;
 using CoreData.Models;
-using ShopBackend.Dto;
+using ShopBackend.DTO;
 
 namespace ShopBackend.Controllers
 {
@@ -69,7 +69,7 @@ namespace ShopBackend.Controllers
                     },
                     Products = brand.Products
                         .Where(product => product.IsActive)
-                        .Select(product => new ProductDto
+                        .Select(product => new ProductDTO
                         {
                             Id = product.Id,
                             Name = product.Name,
