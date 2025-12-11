@@ -1,4 +1,4 @@
-namespace ShopBackend.Dto;
+namespace ShopBackend.DTO;
 
 public class ProductDto
 {

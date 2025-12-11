@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using CoreData.Contexts;
 using CoreData.Models;
-using ShopBackend.Dto;
+using ShopBackend.DTO;
 
 namespace ShopBackend.Controllers
 {
