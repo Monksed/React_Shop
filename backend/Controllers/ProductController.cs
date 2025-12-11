@@ -25,7 +25,7 @@ namespace ShopBackend.Controllers
             if (product == null)
                 return NotFound(new { message = "Товар не найден" });
 
-            var dto = new ProductDto
+            var dto = new ProductDTO
             {
                 Id = product.Id,
                 Name = product.Name,
@@ -43,7 +43,7 @@ namespace ShopBackend.Controllers
         public async Task<IActionResult> GetAllProducts()
         {
             var listProducts = await _context.Products
-                .Select(product => new ProductDto
+                .Select(product => new ProductDTO
                 {
                     Id = product.Id,
                     Name = product.Name,
