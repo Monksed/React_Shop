@@ -3,14 +3,20 @@ import ProductCard from '../components/ProductCard';
 import { useCart } from '../contexts/CartContext';
 import { useBackButtonManager } from '../contexts/BackButtonContext';
 import './Main.scss';
+import { useNavigate } from 'react-router-dom';
 import { FaShoppingCart } from "react-icons/fa";
 import axios from 'axios';
 
 const CartIcon = () => {
   const { cartCount } = useCart();
+  const navigate = useNavigate(); // ← для перехода
+
+  const handleClick = () => {
+    navigate('/cart'); // ← путь к твоей странице корзины
+  };
 
   return (
-    <div className="cart-icon">
+    <div className="cart-icon" onClick={handleClick}>
       <FaShoppingCart className="cart-icon__icon" />
       {cartCount > 0 && <span className="cart-icon__count">{cartCount}</span>}
     </div>
