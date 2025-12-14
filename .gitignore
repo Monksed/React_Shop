@@ -20,6 +20,8 @@ obj/
 *.sln.docstates
 *.log
 appsettings.Development.json
+launchSettings.json
+appsettings.json
 .idea/
 .DS_Store
 Postgree SQL.txt
