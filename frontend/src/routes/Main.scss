@@ -14,12 +14,19 @@
   width: 100%;
   max-width: 1200px;
   padding: 24px 16px;
+  
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  justify-content: center;
+
+  @media (max-width: 380px) {
+    gap: 14px;
+    padding: 24px 10px;
+  }
 }
 
-/* 12312312123 */
+/* Всё остальное без изменений */
 .news-slider {
   position: relative;
   padding: 40px 0 20px;
@@ -86,7 +93,6 @@
   color: white;
   text-shadow: 0 2px 8px black;
 }
-/* 12312312123 */
 
 .cart-icon {
   position: fixed;
@@ -119,7 +125,6 @@
   }
 }
 
-
 .search-section {
   padding: 16px 16px 24px;
   pointer-events: none;
@@ -147,7 +152,6 @@
     box-shadow: 0 12px 40px rgba(0,0,0,0.18);
   }
 }
-
 
 .search-bar__input {
   flex: 1;
@@ -241,7 +245,6 @@
   object-fit: contain;
   filter: brightness(0); 
 }
-
 
 @media (max-width: 370px) {
   .brands-big__grid {

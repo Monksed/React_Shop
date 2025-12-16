@@ -20,15 +20,23 @@ const ProductCard = ({ id, image, name, price, quantity, bonus, onAddToCart }) =
     navigate(`/product/${id}`);
   };
 
+  const formattedPrice = price.toLocaleString('ru-RU') + ' ₽';
+  const formattedBonus = bonus.toLocaleString('ru-RU');
+
   return (
     <div className="product-card">
       <div className="product-image" onClick={handleOpenProduct}>
         <img src={`https://localhost:5023/images/${image}`} alt={name} />
-        <span className="bonus-count">{bonus} ₽</span>
+        
+        <div className="bonus-count">
+          <span className="bonus-value">{formattedBonus}</span>
+          <img src="/images/bonus.svg" alt="bonus" className="bonus-icon" />
+        </div>
       </div>
+
       <div className="product-details">
+        <p>{formattedPrice}</p>
         <h2 onClick={handleOpenProduct}>{name}</h2>
-        <p>{price} ₽</p>
         <button
           className="btn-outline"
           onClick={() => onAddToCart(id)}
