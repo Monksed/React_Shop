@@ -5,15 +5,22 @@ import { useBackButtonManager } from '../contexts/BackButtonContext';
 import './Main.scss';
 import { FaShoppingCart } from "react-icons/fa";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const CartIcon = () => {
   const { cartCount } = useCart();
 
   return (
-    <div className="cart-icon">
-      <FaShoppingCart className="cart-icon__icon" />
-      {cartCount > 0 && <span className="cart-icon__count">{cartCount}</span>}
-    </div>
+<div className="cart-wrapper">
+<Link to="/cart" className="cart-link"> 
+      <div className="cart-icon">
+        <FaShoppingCart className="cart-icon__icon" />
+        {cartCount > 0 && (
+          <span className="cart-icon__count">{cartCount}</span>
+        )}
+      </div>
+    </Link>
+</div>
   );
 };
 
@@ -47,24 +54,25 @@ const MainPage = () => {
       });
   }, [products, searchQuery]);
 
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const response = await axios.get(`https://localhost:5023/api/Product/All`);
-        const productsWithQuantity = response.data.map(p => ({
-          ...p,
-          quantity: 1
-        }));
-        setProducts(productsWithQuantity);
-      } catch (error) {
-        console.error("Ошибка при загрузке товаров:", error);
-      } finally {
-        setIsLoad(false);
-      }
-    };
-    loadProducts();
-    clear();
-  },);
+useEffect(() => {
+  const loadProducts = async () => {
+    try {
+      const response = await axios.get(`https://localhost:5023/api/Product/All`);
+      const productsWithQuantity = response.data.map(p => ({
+        ...p,
+        quantity: 1
+      }));
+      setProducts(productsWithQuantity);
+    } catch (error) {
+      console.error("Ошибка при загрузке товаров:", error);
+
+    } finally {
+      setIsLoad(false);
+    }
+  };
+  loadProducts();
+  clear();
+}, []);
 
   if (isLoad) {
     return <div className="loading">Загрузка...</div>;
