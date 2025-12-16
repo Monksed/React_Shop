@@ -4,7 +4,6 @@ import { useCart } from '../contexts/CartContext';
 import axios from "axios";
 import "./ProductPage.scss";
 import { useBackButtonManager } from "../contexts/BackButtonContext";
-import { miniApp } from "@telegram-apps/sdk-react";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -27,8 +26,6 @@ const ProductPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    miniApp.setBackgroundColor('#FFFFFF');
-    miniApp.setHeaderColor('#FFFFFF');
     action(() => navigate("/"));
     return () => {
       clear();

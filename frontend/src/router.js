@@ -4,6 +4,7 @@ import MainPage from "./routes/Main";
 import CartPage from "./routes/Cart";
 import ProductPage from "./routes/ProductPage";
 import { BackButtonProvider } from "./contexts/BackButtonContext";
+import UserPage from "./routes/UserPage";
 
 const AppRouter = () => {
   return (
@@ -13,6 +14,7 @@ const AppRouter = () => {
           <Route path="/" element={<MainPage />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/user" element={<UserPage />} />
         </Routes>
       </BackButtonProvider>
     </Router>
