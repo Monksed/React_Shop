@@ -14,9 +14,16 @@
   width: 100%;
   max-width: 1200px;
   padding: 24px 16px;
+  
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  justify-content: center;
+
+  @media (max-width: 380px) {
+    gap: 14px;
+    padding: 24px 10px;
+  }
 }
 
 .news-slider {
@@ -166,7 +173,6 @@
   }
 }
 
-
 .search-bar__input {
   flex: 1;
   border: none;
@@ -259,7 +265,6 @@
   object-fit: contain;
   filter: brightness(0); 
 }
-
 
 @media (max-width: 370px) {
   .brands-big__grid {
