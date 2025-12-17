@@ -13,4 +13,13 @@ public class UserDTO
     public string? Image { get; set; }
 }
 
-
+public class UserUpdateDTO
+{
+    public Guid Id { get; set; }
+    public string Username { get; set; } = null!;
+    public string? Fio { get; set; }
+    public string? Address { get; set; }
+    public string? Email { get; set; }
+    public string? Phone { get; set; }
+    public string? Image { get; set; }
+}

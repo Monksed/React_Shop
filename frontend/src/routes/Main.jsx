@@ -3,7 +3,7 @@ import ProductCard from '../components/ProductCard';
 import { useCart } from '../contexts/CartContext';
 import { useBackButtonManager } from '../contexts/BackButtonContext';
 import './Main.scss';
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaUser } from "react-icons/fa";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -11,16 +11,28 @@ const CartIcon = () => {
   const { cartCount } = useCart();
 
   return (
-<div className="cart-wrapper">
-<Link to="/cart" className="cart-link"> 
-      <div className="cart-icon">
-        <FaShoppingCart className="cart-icon__icon" />
-        {cartCount > 0 && (
-          <span className="cart-icon__count">{cartCount}</span>
-        )}
-      </div>
-    </Link>
-</div>
+    <div className="cart-wrapper">
+      <Link to="/cart" className="cart-link">
+        <div className="cart-icon">
+          <FaShoppingCart className="cart-icon__icon" />
+          {cartCount > 0 && (
+            <span className="cart-icon__count">{cartCount}</span>
+          )}
+        </div>
+      </Link>
+    </div>
+  );
+};
+
+const UserIcon = () => {
+  return (
+    <div className='cart-wrapper'>
+      <Link to="/user" className="cart-link">
+        <div className="user-icon">
+          <FaUser className="user-icon__icon" />
+        </div>
+      </Link>
+    </div>
   );
 };
 
@@ -54,25 +66,25 @@ const MainPage = () => {
       });
   }, [products, searchQuery]);
 
-useEffect(() => {
-  const loadProducts = async () => {
-    try {
-      const response = await axios.get(`https://localhost:5023/api/Product/All`);
-      const productsWithQuantity = response.data.map(p => ({
-        ...p,
-        quantity: 1
-      }));
-      setProducts(productsWithQuantity);
-    } catch (error) {
-      console.error("Ошибка при загрузке товаров:", error);
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const response = await axios.get(`https://localhost:5023/api/Product/All`);
+        const productsWithQuantity = response.data.map(p => ({
+          ...p,
+          quantity: 1
+        }));
+        setProducts(productsWithQuantity);
+      } catch (error) {
+        console.error("Ошибка при загрузке товаров:", error);
 
-    } finally {
-      setIsLoad(false);
-    }
-  };
-  loadProducts();
-  clear();
-}, []);
+      } finally {
+        setIsLoad(false);
+      }
+    };
+    loadProducts();
+    clear();
+  }, );
 
   if (isLoad) {
     return <div className="loading">Загрузка...</div>;
@@ -81,7 +93,7 @@ useEffect(() => {
   return (
     <div className="main">
       <CartIcon />
-
+      <UserIcon />
 
       <section className="news-slider">
         <div className="news-track">

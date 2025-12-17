@@ -19,7 +19,6 @@
   gap: 24px;
 }
 
-/* 12312312123 */
 .news-slider {
   position: relative;
   padding: 40px 0 20px;
@@ -86,7 +85,6 @@
   color: white;
   text-shadow: 0 2px 8px black;
 }
-/* 12312312123 */
 
 .cart-icon {
   position: fixed;
@@ -119,6 +117,26 @@
   }
 }
 
+.user-icon {
+  position: fixed;
+  top: 20px;
+  right: 300px;
+  font-size: 28px;
+  color: #212529;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    transform: scale(1.1);
+    color: #0d6efd;
+  }
+
+  .user-icon__icon {
+    margin-right: 5px;
+  }
+}
 
 .search-section {
   padding: 16px 16px 24px;
