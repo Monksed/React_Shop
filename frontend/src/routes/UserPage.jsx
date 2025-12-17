@@ -4,6 +4,8 @@ import { useBackButtonManager } from "../contexts/BackButtonContext";
 import { miniApp } from "@telegram-apps/sdk-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaUser } from "react-icons/fa";
+import './UserPage.scss';
 
 const UserPage = () => {
     const { user, isLoading, loadUser } = useUser();
@@ -13,12 +15,14 @@ const UserPage = () => {
     const [fio, setFio] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
 
     useEffect(() => {
         if (!isLoading && user) {
             setFio(user.fio || "");
             setEmail(user.email || "");
             setPhone(user.phone || "");
+            setAddress(user.address || "");
         }
         miniApp.setBackgroundColor("#FFFFFF");
         miniApp.setHeaderColor("#FFFFFF");
@@ -34,7 +38,8 @@ const UserPage = () => {
                 id: user.id,
                 fio,
                 email,
-                phone
+                phone,
+                address
             });
 
             loadUser();
@@ -43,30 +48,66 @@ const UserPage = () => {
         }
     };
 
-    if (isLoading) return <h1>Загрузка пользователя...</h1>;
+    if (isLoading) return <div className="user-loading">Загрузка пользователя...</div>;
 
     return (
-        <div style={{ padding: "24px" }}>
-            <h1>Пользователь</h1>
-
-            <div style={{ margin: "12px 0" }}>
-                <label>ФИО</label>
-                <input value={fio} onChange={(e) => setFio(e.target.value)} />
+        <div className="user-page">
+            {/* Аватар и имя */}
+            <div className="user-header">
+                <div className="user-avatar">
+                    <FaUser className="user-avatar__icon" />
+                </div>
             </div>
 
-            <div style={{ margin: "12px 0" }}>
-                <label>Email</label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
+            {/* Карточка с формой */}
+            <div className="user-card">
+                <h2 className="user-card__title">Данные для доставки</h2>
+                <p className="user-card__desc">
+                    Чтобы не вводить каждый раз после заказа.<br />
+                </p>
 
-            <div style={{ margin: "12px 0" }}>
-                <label>Телефон</label>
-                <input value={phone} onChange={(e) => setPhone(e.target.value)} />
-            </div>
+                <div className="user-form">
+                    <div className="user-field">
+                        <label className="user-field__label">ФИО</label>
+                        <input
+                            className="user-field__input"
+                            value={fio}
+                            onChange={(e) => setFio(e.target.value)}
+                        />
+                    </div>
 
-            <button onClick={saveUser} style={{ marginTop: "12px" }}>
-                Сохранить изменения
-            </button>
+                    <div className="user-field">
+                        <label className="user-field__label">Email</label>
+                        <input
+                            className="user-field__input"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="user-field">
+                        <label className="user-field__label">Телефон</label>
+                        <input
+                            className="user-field__input"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                        />
+                    </div>
+
+                                        <div className="user-field">
+                        <label className="user-field__label">Адрес</label>
+                        <input
+                            className="user-field__input"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                <button className="user-save-btn" onClick={saveUser}>
+                    Сохранить изменения
+                </button>
+            </div>
         </div>
     );
 };

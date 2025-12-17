@@ -26,7 +26,7 @@ const CartIcon = () => {
 
 const UserIcon = () => {
   return (
-    <div className='cart-wrapper'>
+    <div className='user-wrapper'>
       <Link to="/user" className="cart-link">
         <div className="user-icon">
           <FaUser className="user-icon__icon" />
