@@ -102,8 +102,8 @@ const ProductPage = () => {
             {images.map((img, index) => (
               <img
                 key={index}
-                src={`/images/${img}`}
-                alt={`${product.title} ${index + 1}`}
+                src={`https://localhost:5023/images/${img}`}
+                alt={`${product.name} ${index + 1}`}
                 className="product-page__slide"
               />
             ))}
@@ -118,7 +118,7 @@ const ProductPage = () => {
         </div>
 
 
-        <h1 className="product-page__title">{product.title}</h1>
+        <h1 className="product-page__title">{product.name}</h1>
 
 
         <div className="product-page__sizes">
