@@ -26,7 +26,6 @@
   }
 }
 
-/* Всё остальное без изменений */
 .news-slider {
   position: relative;
   padding: 40px 0 20px;
@@ -122,6 +121,27 @@
     padding: 4px 6px;
     border-radius: 50%;
     margin-left: 4px;
+  }
+}
+
+.user-icon {
+  position: fixed;
+  top: 20px;
+  right: 300px;
+  font-size: 28px;
+  color: #212529;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    transform: scale(1.1);
+    color: #0d6efd;
+  }
+
+  .user-icon__icon {
+    margin-right: 5px;
   }
 }
 

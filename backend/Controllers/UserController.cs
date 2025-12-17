@@ -17,15 +17,6 @@ public class UserController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("ByTelegram/{telegramId:long}")]
-    public async Task<ActionResult<UserDTO>> GetByTelegram(long telegramId)
-    {
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.TelegramId == telegramId && u.IsActive);
-
-        return user is null ? NotFound() : Ok(MapToDto(user));
-    }
-
     [HttpGet("user/{id:guid}")]
     public async Task<ActionResult<UserDTO>> GetById(Guid id)
     {
@@ -38,8 +29,6 @@ public class UserController : ControllerBase
     [HttpPost("RegisterOrLogin")]
     public async Task<ActionResult<UserDTO>> RegisterOrLogin([FromBody] RegisterRequest request)
     {
-        if (request.TelegramId is null)
-            return BadRequest("TelegramId обязателен");
 
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.TelegramId == request.TelegramId);
@@ -71,7 +60,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("Update")]
-    public async Task<ActionResult<UserDTO>> Update([FromBody] UserDTO dto)
+    public async Task<ActionResult<UserDTO>> Update([FromBody] UserUpdateDTO dto)
     {
         if (dto.Id == Guid.Empty)
             return BadRequest("Id обязателен");
