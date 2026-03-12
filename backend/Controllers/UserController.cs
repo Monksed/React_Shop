@@ -1,13 +1,16 @@
 using CoreData.Contexts;
 using CoreData.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopBackend.DTO;
+using System.Security.Claims;
 
 namespace ShopBackend.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class UserController : ControllerBase
 {
     private readonly React_ShopContext _context;
@@ -17,56 +20,30 @@ public class UserController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("user/{id:guid}")]
-    public async Task<ActionResult<UserDTO>> GetById(Guid id)
+    // userId из JWT токена
+    private Guid GetUserId() =>
+        Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+    // GET /api/user/me
+    [HttpGet("me")]
+    public async Task<ActionResult<UserDTO>> GetMe()
     {
+        var userId = GetUserId();
+
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Id == id && u.IsActive);
+            .FirstOrDefaultAsync(u => u.Id == userId && u.IsActive);
 
         return user is null ? NotFound() : Ok(MapToDto(user));
     }
 
-    [HttpPost("RegisterOrLogin")]
-    public async Task<ActionResult<UserDTO>> RegisterOrLogin([FromBody] RegisterRequest request)
-    {
-
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.TelegramId == request.TelegramId);
-
-        if (user is null)
-        {
-            user = new User
-            {
-                Id = Guid.NewGuid(),
-                TelegramId = request.TelegramId,
-                Username = request.Username,
-                Fio = request.Fio,
-                Score = 0,
-                IsActive = true,
-                CreateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                UpdateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified)
-            };
-            _context.Users.Add(user);
-        }
-        else
-        {
-            user.Username = request.Username ?? user.Username;
-            user.Fio = request.Fio ?? user.Fio;
-            user.UpdateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-        }
-
-        await _context.SaveChangesAsync();
-        return Ok(MapToDto(user));
-    }
-
+    // POST /api/user/Update
     [HttpPost("Update")]
     public async Task<ActionResult<UserDTO>> Update([FromBody] UserUpdateDTO dto)
     {
-        if (dto.Id == Guid.Empty)
-            return BadRequest("Id обязателен");
+        var userId = GetUserId();
 
         var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Id == dto.Id && u.IsActive);
+            .FirstOrDefaultAsync(u => u.Id == userId && u.IsActive);
 
         if (user is null)
             return NotFound();
@@ -95,11 +72,4 @@ public class UserController : ControllerBase
         Phone = user.Phone,
         Image = user.Image
     };
-}
-
-public class RegisterRequest
-{
-    public long? TelegramId { get; set; }
-    public string? Username { get; set; }
-    public string? Fio { get; set; }
 }

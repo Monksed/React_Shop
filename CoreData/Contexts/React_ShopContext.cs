@@ -137,6 +137,9 @@ public partial class React_ShopContext : DbContext
             entity.Property(e => e.Username)
                 .HasColumnType("character varying")
                 .HasColumnName("username");
+            entity.Property(e => e.PasswordHash)
+                .HasColumnType("character varying")
+                .HasColumnName("password_hash");
         });
 
         OnModelCreatingPartial(modelBuilder);
