@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "../contexts/UserContext";
 import { api } from "../services/api";
+import { useAuthStore } from "@/store/authStore";
 
 export default function UserPage() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function UserPage() {
   const [address, setAddress] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("");
+  const { logout } = useAuthStore();
 
   useEffect(() => {
     if (!isLoading && user) {
@@ -160,6 +162,10 @@ export default function UserPage() {
             </View>
           )}
         </View>
+        <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
+          <Ionicons name="log-out-outline" size={20} color="#ff3b30" />
+          <Text style={styles.logoutText}>Выйти из аккаунта</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -243,4 +249,22 @@ const styles = StyleSheet.create({
   statusSuccess: { backgroundColor: "#e6f4ea" },
   statusError: { backgroundColor: "#fce8e6" },
   statusText: { fontSize: 14, fontWeight: "500", color: "#333" },
+  logoutBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 32,
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: "#ff3b30",
+  },
+  logoutText: {
+    color: "#ff3b30",
+    fontSize: 16,
+    fontWeight: "600",
+  },
 });

@@ -1,40 +1,55 @@
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
+import { authService } from "./authServices";
 
 export const BASE_URL = Platform.select({
-  ios: 'http://localhost:5023',
-  android: 'http://10.0.2.2:5023',
+  ios: "http://localhost:5023",
+  android: "http://10.0.2.2:5023",
 });
 
+async function request<T>(
+  endpoint: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const token = await authService.getToken();
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  });
+
+  if (response.status === 401) {
+    await authService.clearAuth();
+    throw new Error("UNAUTHORIZED");
+  }
+
+  if (!response.ok) {
+    const errText = await response.text();
+    console.error(`${endpoint} → ${response.status}:`, errText);
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  return response.json();
+}
+
 export const api = {
-  get: async <T>(path: string): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  },
+  get: <T>(path: string) => request<T>(path),
 
-  post: async <T>(path: string, body: unknown): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+  post: <T>(path: string, body: unknown) =>
+    request<T>(path, {
+      method: "POST",
       body: JSON.stringify(body),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  },
+    }),
 
-  put: async <T>(path: string, body: unknown): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+  put: <T>(path: string, body: unknown) =>
+    request<T>(path, {
+      method: "PUT",
       body: JSON.stringify(body),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  },
+    }),
 
-  delete: async <T>(path: string): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  },
+  delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
 };
