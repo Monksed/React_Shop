@@ -56,6 +56,7 @@ namespace ShopBackend.Controllers
 
             return Ok(listProducts);
         }
+        
         [HttpPost("Buy/{id}")]
         public async Task<IActionResult> BuyProduct(Guid id)
         {
@@ -66,6 +67,27 @@ namespace ShopBackend.Controllers
             //TODO Логика покупки/добавления в корзину
 
             return Ok(new { message = "Товар успешно добавлен в корзину", productId = id });
+        }
+
+        [HttpGet("Latest")]
+        public async Task<IActionResult> GetLatestProducts([FromQuery] int limit = 6)
+        {
+            var products = await _context.Products
+                .Where(p => p.IsActive)
+                .OrderByDescending(p => p.CreateDate)
+                .Take(limit)
+                .Select(p => new ProductDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Image = p.Image,
+                    Bonus = p.Bonus,
+                    BrandId = p.BrandId
+                })
+                .ToListAsync();
+
+            return Ok(products);
         }
     }
 }

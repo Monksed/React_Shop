@@ -30,7 +30,7 @@ export const useUser = () => {
 };
 
 // TODO: заменить на userId из JWT после добавления авторизации
-const USER_ID = "4f915879-f233-419b-af7e-fa8c83c56e8e";
+const USER_ID = "de4ffe00-7418-42c6-ba59-15feaf6db040";
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
