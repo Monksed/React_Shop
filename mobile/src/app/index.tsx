@@ -198,6 +198,7 @@ export default function MainPage() {
             {/* Бренды */}
             <View style={styles.brandsSection}>
               <Text style={styles.brandsTitle}>Бренды кроссовок</Text>
+              
               <View style={styles.brandsGrid}>
                 {brands.map((brand) => (
                   <TouchableOpacity
@@ -214,7 +215,6 @@ export default function MainPage() {
                     <Image
                       source={{ uri: `${BASE_URL}/images/${brand.image}` }}
                       style={styles.brandLogo}
-                      resizeMode="contain"
                     />
                   </TouchableOpacity>
                 ))}
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 52,
     gap: 10,
-    width: 240,
+    width: "100%",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -354,29 +354,47 @@ const styles = StyleSheet.create({
   },
   cardWrapper: { flex: 1 },
 
-  // Бренды
-  brandsSection: { padding: 16, backgroundColor: "#fff", marginTop: 16 },
-  brandsTitle: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#000",
-    marginBottom: 20,
-  },
-  brandsGrid: { flexDirection: "row", flexWrap: "wrap", gap: 16 },
-  brandBtn: {
-    width: "30%",
-    aspectRatio: 1.1,
-    backgroundColor: "#fff",
-    borderWidth: 1.5,
-    borderColor: "#e8e8e8",
-    borderRadius: 28,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
-  },
-  brandLogo: { width: "78%", height: "78%" },
+// Бренды
+brandsSection: { 
+  padding: 16, 
+  marginTop: 16 
+},
+
+brandsTitle: {
+  fontSize: 24,
+  fontWeight: "800",
+  color: "#000",
+  marginBottom: 24,
+  textAlign: "center",
+},
+
+brandsGrid: { 
+  flexDirection: "row", 
+  flexWrap: "wrap", 
+  gap: 16,
+  justifyContent: "center",        // центрируем всю сетку
+},
+
+brandBtn: {
+  width: 110,                      // фиксированная ширина
+  height: 110,                     // фиксированная высота — квадрат
+  backgroundColor: "#fff",
+  borderWidth: 1.5,
+  borderColor: "#e8e8e8",
+  borderRadius: 28,
+  alignItems: "center",
+  justifyContent: "center",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.08,
+  shadowRadius: 12,
+  elevation: 3,
+  overflow: "hidden",              // важно!
+},
+
+brandLogo: { 
+  width: "75%",                    // чуть уменьшил, чтобы не вылезало
+  height: "75%",
+  resizeMode: "contain"            // уже было, но оставляем явно
+},
 });
