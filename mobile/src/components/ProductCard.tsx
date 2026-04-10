@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
-    backgroundColor: "#FF0051",   // минималистичный тёмный фон
+    backgroundColor: "#FF0051",   
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 25,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     flex: 1,
     justifyContent: "space-between",
-    gap: 6,
+    gap: 0,
   },
   price: {
     fontSize: 18,
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   addBtn: {
-    marginTop: 12,
     paddingVertical: 10,
     paddingHorizontal: 12,
     backgroundColor: "#212529",
