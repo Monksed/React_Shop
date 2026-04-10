@@ -3,34 +3,33 @@ namespace Shopbackend.DTO;
 public class OrderDTO
 {
     public Guid Id { get; set; }
-
-    public DateTime CreatedAt { get; set; }
-
-    public decimal TotalPrice { get; set; }
-
-    public List<OrderItemDTO> Items { get; set; } = new List<OrderItemDTO>();
-
+    public string? Status { get; set; }
+    public long TotalPrice { get; set; }
+    public DateTime CreateDate { get; set; }
+    public List<OrderItemDTO> Items { get; set; } = new();
 }
 
 public class OrderItemDTO
 {
     public Guid Id { get; set; }
-
     public string? ProductName { get; set; }
-
+    public long Price { get; set; }
     public int Quantity { get; set; }
-
-    public decimal Price { get; set; }
-
-
+    public string? SelectedSize { get; set; }
+    public string? Image { get; set; }
+    public Guid ProductId { get; set; }
 }
 public class CreateOrderItemDTO
 {
-    public int ProductId { get; set; }
+    public Guid ProductId { get; set; }
+    public string? ProductName { get; set; }
+    public long Price { get; set; }
     public int Quantity { get; set; }
+    public string? SelectedSize { get; set; }
+    public string? Image { get; set; }
 }
 
 public class CreateOrderDTO
 {
-    public List<CreateOrderItemDTO> Items { get; set; } = new List<CreateOrderItemDTO>();
+    public List<CreateOrderItemDTO> Items { get; set; } = new();
 }

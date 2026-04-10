@@ -138,6 +138,68 @@ public partial class React_ShopContext : DbContext
                 .HasColumnType("character varying")
                 .HasColumnName("username");
         });
+        modelBuilder.Entity<Order>(entity =>
+{
+            entity.HasKey(e => e.Id).HasName("Order_pkey");
+            entity.ToTable("Order");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("gen_random_uuid()")
+                .HasColumnName("id");
+            entity.Property(e => e.UserId)
+                .HasColumnName("user_id");
+            entity.Property(e => e.Status)
+                .HasColumnType("character varying")
+                .HasColumnName("status");
+            entity.Property(e => e.TotalPrice)
+                .HasColumnName("total_price");
+            entity.Property(e => e.CreateDate)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("create_date");
+
+            entity.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .HasConstraintName("fk_order_user");
+        });
+
+        modelBuilder.Entity<OrderItem>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("OrderItem_pkey");
+            entity.ToTable("OrderItem");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("gen_random_uuid()")
+                .HasColumnName("id");
+            entity.Property(e => e.OrderId)
+                .HasColumnName("order_id");
+            entity.Property(e => e.ProductId)
+                .HasColumnName("product_id");
+            entity.Property(e => e.ProductName)
+                .HasColumnType("character varying")
+                .HasColumnName("product_name");
+            entity.Property(e => e.Price)
+                .HasColumnName("price");
+            entity.Property(e => e.Quantity)
+                .HasColumnName("quantity");
+            entity.Property(e => e.SelectedSize)
+                .HasColumnType("character varying")
+                .HasColumnName("selected_size");
+            entity.Property(e => e.Image)
+                .HasColumnType("character varying")
+                .HasColumnName("image");
+
+            entity.HasOne(e => e.Order)
+                .WithMany(o => o.OrderItems)
+                .HasForeignKey(e => e.OrderId)
+                .HasConstraintName("fk_orderitem_order");
+
+            entity.HasOne(e => e.Product)
+                .WithMany()
+                .HasForeignKey(e => e.ProductId)
+                .HasConstraintName("fk_orderitem_product");
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }
