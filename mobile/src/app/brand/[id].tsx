@@ -204,7 +204,7 @@ export default function BrandPage() {
             {row.map((product: ProductDTO) => (
               <View key={product.id} style={styles.cardWrapper}>
                 <ProductCard
-                  id={Number(product.id)}
+                  id={product.id}
                   image={product.image ?? ""}
                   name={product.name ?? ""}
                   description={product.description ?? ""}

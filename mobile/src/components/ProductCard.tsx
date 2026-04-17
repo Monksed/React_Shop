@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { BASE_URL } from "../services/api";
 
 interface Props {
-  id: number;
+  id: string;
   image: string;
   name: string;
   description: string;
