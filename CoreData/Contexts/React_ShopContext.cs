@@ -22,6 +22,8 @@ public partial class React_ShopContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<Order> Orders { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Name=Default");
 
@@ -140,29 +142,29 @@ public partial class React_ShopContext : DbContext
         });
         modelBuilder.Entity<Order>(entity =>
 {
-            entity.HasKey(e => e.Id).HasName("Order_pkey");
-            entity.ToTable("Order");
+    entity.HasKey(e => e.Id).HasName("Order_pkey");
+    entity.ToTable("Order");
 
-            entity.Property(e => e.Id)
-                .HasDefaultValueSql("gen_random_uuid()")
-                .HasColumnName("id");
-            entity.Property(e => e.UserId)
-                .HasColumnName("user_id");
-            entity.Property(e => e.Status)
-                .HasColumnType("character varying")
-                .HasColumnName("status");
-            entity.Property(e => e.TotalPrice)
-                .HasColumnName("total_price");
-            entity.Property(e => e.CreateDate)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("create_date");
+    entity.Property(e => e.Id)
+        .HasDefaultValueSql("gen_random_uuid()")
+        .HasColumnName("id");
+    entity.Property(e => e.UserId)
+        .HasColumnName("user_id");
+    entity.Property(e => e.Status)
+        .HasColumnType("character varying")
+        .HasColumnName("status");
+    entity.Property(e => e.TotalPrice)
+        .HasColumnName("total_price");
+    entity.Property(e => e.CreateDate)
+        .HasDefaultValueSql("CURRENT_TIMESTAMP")
+        .HasColumnType("timestamp without time zone")
+        .HasColumnName("create_date");
 
-            entity.HasOne(e => e.User)
-                .WithMany()
-                .HasForeignKey(e => e.UserId)
-                .HasConstraintName("fk_order_user");
-        });
+    entity.HasOne(e => e.User)
+        .WithMany()
+        .HasForeignKey(e => e.UserId)
+        .HasConstraintName("fk_order_user");
+});
 
         modelBuilder.Entity<OrderItem>(entity =>
         {

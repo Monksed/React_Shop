@@ -1,4 +1,4 @@
-namespace Shopbackend.DTO;
+namespace ShopBackend.DTO;
 
 public class OrderDTO
 {
