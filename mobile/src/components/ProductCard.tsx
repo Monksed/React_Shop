@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { BASE_URL } from "../services/api";
+import { BASE_URL } from "../constants/config";
 
 interface Props {
   id: number;

@@ -12,8 +12,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useUser } from "../contexts/UserContext";
-import { api } from "../services/api";
-import { useAuthStore } from "@/store/authStore";
+import api from "../services/api";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function UserPage() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function UserPage() {
   const [address, setAddress] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("");
-  const { logout } = useAuthStore();
+  const { logout } = useAuth();
 
   useEffect(() => {
     if (!isLoading && user) {
@@ -43,8 +43,7 @@ export default function UserPage() {
     setSaveStatus("");
 
     try {
-      await api.post("/api/User/Update", {
-        id: user.id,
+      await api.post("/User/Update", {
         fio,
         email,
         phone,

@@ -6,9 +6,9 @@ import {
   useCallback,
   ReactNode,
 } from "react";
-import { api } from "../services/api";
-import { useAuthStore } from "../store/authStore";
+import api from "../services/api";
 import { UserDTO } from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 interface UserContextType {
   user: UserDTO | null;
@@ -27,7 +27,7 @@ export const useUser = () => {
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserDTO | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuth();
 
   const loadUser = useCallback(async () => {
     if (!isAuthenticated) {
@@ -35,7 +35,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     try {
-      const data = await api.get<UserDTO>("/api/user/me");
+      const { data } = await api.get<UserDTO>("/user/me");
       setUser(data);
     } catch (error) {
       console.error("Ошибка загрузки пользователя:", error);

@@ -15,7 +15,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../contexts/CartContext";
-import { api } from "../services/api";
+import api from "../services/api";
 
 const NEWS = [
   "Travis Scott × Jordan уже здесь",
@@ -70,8 +70,8 @@ export default function MainPage() {
 
   useEffect(() => {
     api
-      .get<any[]>("/api/Product/All")
-      .then((data) => setProducts(data.map((p) => ({ ...p, quantity: 1 }))))
+      .get<any[]>("/Product/All")
+      .then(({ data }) => setProducts(data.map((p) => ({ ...p, quantity: 1 }))))
       .catch((err) => console.error("Ошибка загрузки:", err))
       .finally(() => setIsLoad(false));
   }, []);

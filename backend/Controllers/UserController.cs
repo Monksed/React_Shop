@@ -3,8 +3,8 @@ using CoreData.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShopBackend.DTO;
 using System.Security.Claims;
+using ShopBackend.DTO;
 
 namespace ShopBackend.Controllers;
 
@@ -20,25 +20,11 @@ public class UserController : ControllerBase
         _context = context;
     }
 
-    // userId из JWT токена
     private Guid GetUserId() =>
         Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-    // GET /api/user/me
     [HttpGet("me")]
-    public async Task<ActionResult<UserDTO>> GetMe()
-    {
-        var userId = GetUserId();
-
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Id == userId && u.IsActive);
-
-        return user is null ? NotFound() : Ok(MapToDto(user));
-    }
-
-    // POST /api/user/Update
-    [HttpPost("Update")]
-    public async Task<ActionResult<UserDTO>> Update([FromBody] UserUpdateDTO dto)
+    public async Task<IActionResult> GetMe()
     {
         var userId = GetUserId();
 
@@ -46,7 +32,21 @@ public class UserController : ControllerBase
             .FirstOrDefaultAsync(u => u.Id == userId && u.IsActive);
 
         if (user is null)
-            return NotFound();
+            return NotFound(new { message = "Пользователь не найден" });
+
+        return Ok(MapToDto(user));
+    }
+
+    [HttpPost("Update")]
+    public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDTO dto)
+    {
+        var userId = GetUserId();
+
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == userId && u.IsActive);
+
+        if (user is null)
+            return NotFound(new { message = "Пользователь не найден" });
 
         user.Username = dto.Username ?? user.Username;
         user.Fio = dto.Fio ?? user.Fio;
@@ -57,6 +57,7 @@ public class UserController : ControllerBase
         user.UpdateDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
 
         await _context.SaveChangesAsync();
+
         return Ok(MapToDto(user));
     }
 

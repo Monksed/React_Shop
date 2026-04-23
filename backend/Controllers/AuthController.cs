@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using CoreData.Contexts;
 using CoreData.Models;
+using CoreData.Helpers;
 
 namespace ShopBackend.Controllers;
 
@@ -22,7 +22,6 @@ public class AuthController : ControllerBase
         _config = config;
     }
 
-    //POST /api/auth/register
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] AuthRequest request)
     {
@@ -64,16 +63,16 @@ public class AuthController : ControllerBase
         if (user == null || string.IsNullOrEmpty(user.PasswordHash))
             return Unauthorized(new { message = "Неверный email или пароль" });
 
+        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            return Unauthorized(new { message = "Неверный email или пароль" });
+
         var token = GenerateToken(user);
         return Ok(new { token, userId = user.Id });
     }
 
     private string GenerateToken(User user)
     {
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_config["Jwt:Secret"]!)
-        );
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var now = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
 
         var claims = new[]
         {
@@ -81,15 +80,19 @@ public class AuthController : ControllerBase
             new Claim(ClaimTypes.Email, user.Email ?? ""),
         };
 
-        var token = new JwtSecurityToken(
+        var jwt = new JwtSecurityToken(
+            issuer: AuthOptions.ISSUER,
+            audience: AuthOptions.AUDIENCE,
+            notBefore: now,
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(30),
-            signingCredentials: creds
+            expires: now.AddDays(30),
+            signingCredentials: new SigningCredentials(
+                AuthOptions.GetSymmetricSecurityKey(_config["Jwt:Secret"]!),
+                SecurityAlgorithms.HmacSha256)
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
 }
-
 
 public record AuthRequest(string Email, string Password);

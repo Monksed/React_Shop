@@ -1,55 +1,33 @@
-import { Platform } from "react-native";
-import { authService } from "./authServices";
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import { BASE_URL } from "../constants/config";
 
-export const BASE_URL = Platform.select({
-  ios: "http://localhost:5023",
-  android: "http://10.0.2.2:5023",
-});
+let accessToken: string | null = null;
 
-async function request<T>(
-  endpoint: string,
-  options: RequestInit = {},
-): Promise<T> {
-  const token = await authService.getToken();
-
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
-  });
-
-  if (response.status === 401) {
-    await authService.clearAuth();
-    throw new Error("UNAUTHORIZED");
-  }
-
-  if (!response.ok) {
-    const errText = await response.text();
-    console.error(`${endpoint} → ${response.status}:`, errText);
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  return response.json();
+export function setAccessToken(token: string | null) {
+  accessToken = token;
 }
 
-export const api = {
-  get: <T>(path: string) => request<T>(path),
+const api: AxiosInstance = axios.create({
+  baseURL: `${BASE_URL}/api`,
+  timeout: 40000,
+});
 
-  post: <T>(path: string, body: unknown) =>
-    request<T>(path, {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  return config;
+});
 
-  put: <T>(path: string, body: unknown) =>
-    request<T>(path, {
-      method: "PUT",
-      body: JSON.stringify(body),
-    }),
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      setAccessToken(null);
+      throw new Error("UNAUTHORIZED");
+    }
+    throw error;
+  },
+);
 
-  delete: <T>(path: string) => request<T>(path, { method: "DELETE" }),
-};
+export default api;

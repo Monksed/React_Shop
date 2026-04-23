@@ -16,9 +16,4 @@ export const authService = {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
     await SecureStore.deleteItemAsync(USER_ID_KEY);
   },
-
-  isAuthenticated: async () => {
-    const token = await SecureStore.getItemAsync(TOKEN_KEY);
-    return token !== null;
-  },
 };

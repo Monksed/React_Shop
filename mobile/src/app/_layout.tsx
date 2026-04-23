@@ -1,35 +1,26 @@
 import { useEffect } from "react";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import * as SecureStore from "expo-secure-store";
 import { CartProvider } from "../contexts/CartContext";
 import { UserProvider } from "../contexts/UserContext";
-import { useAuthStore } from "../store/authStore";
+import { AuthProvider, useAuth } from "../contexts/AuthContext";
 
 function RootLayoutNav() {
-  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
+  const { isAuthenticated, authReady } = useAuth();
   const segments = useSegments();
   const router = useRouter();
-  useEffect(() => {
-    SecureStore.deleteItemAsync("auth.token");
-    SecureStore.deleteItemAsync("user.id");
-  }, []);
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    if (!authReady) return;
 
-  useEffect(() => {
-    if (isLoading) return;
-
-    const inAuthGroup = segments[0] === "(auth)";
+    const inAuthGroup = (segments[0] as string) === "(auth)";
 
     if (!isAuthenticated && !inAuthGroup) {
       router.replace("/(auth)/login" as any);
     } else if (isAuthenticated && inAuthGroup) {
       router.replace("/");
     }
-  }, [isAuthenticated, isLoading, segments, router]);
+  }, [isAuthenticated, authReady, segments, router]);
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }
@@ -37,11 +28,13 @@ function RootLayoutNav() {
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
-      <UserProvider>
-        <CartProvider>
-          <RootLayoutNav />
-        </CartProvider>
-      </UserProvider>
+      <AuthProvider>
+        <UserProvider>
+          <CartProvider>
+            <RootLayoutNav />
+          </CartProvider>
+        </UserProvider>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }
