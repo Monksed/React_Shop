@@ -16,6 +16,8 @@ import { Ionicons } from "@expo/vector-icons";
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../contexts/CartContext";
 import api from "../services/api";
+import { BASE_URL } from "../constants/config";
+import { BrandDTO } from "../types";
 
 const NEWS = [
   "Travis Scott × Jordan уже здесь",
@@ -63,13 +65,13 @@ export default function MainPage() {
       .finally(() => setIsLoad(false));
 
     api
-      .get<BrandDTO[]>("/api/Brand/All")
-      .then((data) => setBrands(data.slice(0, 12)))
+      .get<BrandDTO[]>("/Brand/All")
+      .then(({ data }) => setBrands(data.slice(0, 12)))
       .catch((err) => console.error("Ошибка загрузки брендов:", err));
 
     api
-      .get<any[]>("/api/Product/Latest?limit=6")
-      .then((data) =>
+      .get<any[]>("/Product/Latest?limit=6")
+      .then(({ data }) =>
         setLatestProducts(data.map((p) => ({ ...p, quantity: 1 }))),
       )
       .catch((err) => console.error("Ошибка загрузки последних товаров:", err));
@@ -197,7 +199,7 @@ export default function MainPage() {
             {/* Бренды */}
             <View style={styles.brandsSection}>
               <Text style={styles.brandsTitle}>Бренды кроссовок</Text>
-              
+
               <View style={styles.brandsGrid}>
                 {brands.map((brand) => (
                   <TouchableOpacity
@@ -353,47 +355,47 @@ const styles = StyleSheet.create({
   },
   cardWrapper: { flex: 1 },
 
-// Бренды
-brandsSection: { 
-  padding: 16, 
-  marginTop: 16 
-},
+  // Бренды
+  brandsSection: {
+    padding: 16,
+    marginTop: 16,
+  },
 
-brandsTitle: {
-  fontSize: 24,
-  fontWeight: "800",
-  color: "#000",
-  marginBottom: 24,
-  textAlign: "center",
-},
+  brandsTitle: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#000",
+    marginBottom: 24,
+    textAlign: "center",
+  },
 
-brandsGrid: { 
-  flexDirection: "row", 
-  flexWrap: "wrap", 
-  gap: 16,
-  justifyContent: "center",        
-},
+  brandsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 16,
+    justifyContent: "center",
+  },
 
-brandBtn: {
-  width: 110,                      
-  height: 110,                     
-  backgroundColor: "#fff",
-  borderWidth: 1.5,
-  borderColor: "#e8e8e8",
-  borderRadius: 28,
-  alignItems: "center",
-  justifyContent: "center",
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.08,
-  shadowRadius: 12,
-  elevation: 3,
-  overflow: "hidden",              
-},
+  brandBtn: {
+    width: 110,
+    height: 110,
+    backgroundColor: "#fff",
+    borderWidth: 1.5,
+    borderColor: "#e8e8e8",
+    borderRadius: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 3,
+    overflow: "hidden",
+  },
 
-brandLogo: { 
-  width: "75%",                    
-  height: "75%",
-  resizeMode: "contain"            
-},
+  brandLogo: {
+    width: "75%",
+    height: "75%",
+    resizeMode: "contain",
+  },
 });

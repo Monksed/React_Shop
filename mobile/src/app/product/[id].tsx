@@ -43,7 +43,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     api
-      .get<any>(`/Product/One/${id}`)
+      .get<any>(`/Product/${id}`)
       .then(({ data }) => setProduct({ ...data, quantity: 1 }))
       .catch((err) => console.error(err))
       .finally(() => setIsLoad(false));

@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import ProductCard from "../../components/ProductCard";
 import { useCart } from "../../contexts/CartContext";
-import { api } from "../../services/api";
+import api from "../../services/api";
 import { BrandDTO, ProductDTO } from "../../types";
 
 interface BrandWithProducts {
@@ -58,8 +58,8 @@ export default function BrandPage() {
 
   useEffect(() => {
     api
-      .get<BrandWithProducts>(`/api/Brand/${id}/products`)
-      .then((res) => setData(res))
+      .get<BrandWithProducts>(`/Brand/${id}/products`)
+      .then(({ data }) => setData(data))
       .catch((err) => console.error("Ошибка загрузки бренда:", err))
       .finally(() => setIsLoad(false));
   }, [id]);

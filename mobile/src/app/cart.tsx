@@ -34,7 +34,7 @@ export default function CartPage() {
           </Text>
           <TouchableOpacity
             style={styles.backToShopBtn}
-            onPress={() => router.replace("/")}
+            onPress={() => router.back()}
           >
             <Text style={styles.backToShopText}>Вернуться к покупкам</Text>
           </TouchableOpacity>
