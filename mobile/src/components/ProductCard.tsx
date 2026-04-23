@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import { BASE_URL } from "../constants/config";
 
 interface Props {
-  id: number;
+  id: string;
   image: string;
   name: string;
   description: string;
@@ -39,7 +39,10 @@ export default function ProductCard({
         />
         {bonus && bonus > 0 && (
           <View style={styles.bonusBadge}>
-            <Text style={styles.bonusText}>+{bonus} бонусов</Text>
+            <Text style={styles.bonusPoints}>{bonus}</Text>
+            <View style={styles.rubleCircle}>
+              <Text style={styles.rubleSymbol}>₽</Text>
+            </View>
           </View>
         )}
       </View>
@@ -80,25 +83,45 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
+
   bonusBadge: {
     position: "absolute",
     top: 10,
     left: 10,
-    backgroundColor: "#e91e63",
+    backgroundColor: "#FF0051",   
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 20,
+    borderRadius: 25,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
-  bonusText: {
-    color: "#fff",
+  bonusPoints: {
+    color: "#ffffff",
+    fontSize: 13.5,
+    fontWeight: "700",
+  },
+  rubleCircle: {
+    width: 19,
+    height: 19,
+    borderRadius: 10,
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#dddddd",
+  },
+  rubleSymbol: {
+    color: "#FF0051",
     fontSize: 12,
     fontWeight: "700",
   },
+
   details: {
     paddingTop: 10,
     flex: 1,
     justifyContent: "space-between",
-    gap: 6,
+    gap: 0,
   },
   price: {
     fontSize: 18,
@@ -112,7 +135,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   addBtn: {
-    marginTop: 12,
     paddingVertical: 10,
     paddingHorizontal: 12,
     backgroundColor: "#212529",

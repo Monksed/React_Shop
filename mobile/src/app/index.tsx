@@ -28,21 +28,6 @@ const NEWS = [
   "Новое поступление Off-White",
 ];
 
-const BRANDS = [
-  "Nike",
-  "Jordan",
-  "Adidas",
-  "Yeezy",
-  "New Balance",
-  "Puma",
-  "Asics",
-  "Vans",
-  "Off-White",
-  "Balenciaga",
-  "Gucci",
-  "Versace",
-];
-
 export default function MainPage() {
   const router = useRouter();
   const { addToCart, cartCount } = useCart();
@@ -50,6 +35,8 @@ export default function MainPage() {
   const [isLoad, setIsLoad] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [brands, setBrands] = useState<BrandDTO[]>([]);
+  const [latestProducts, setLatestProducts] = useState<any[]>([]);
 
   const filteredProducts = useMemo(() => {
     if (!searchQuery.trim()) return products;
@@ -74,6 +61,18 @@ export default function MainPage() {
       .then(({ data }) => setProducts(data.map((p) => ({ ...p, quantity: 1 }))))
       .catch((err) => console.error("Ошибка загрузки:", err))
       .finally(() => setIsLoad(false));
+
+    api
+      .get<BrandDTO[]>("/api/Brand/All")
+      .then((data) => setBrands(data.slice(0, 12)))
+      .catch((err) => console.error("Ошибка загрузки брендов:", err));
+
+    api
+      .get<any[]>("/api/Product/Latest?limit=6")
+      .then((data) =>
+        setLatestProducts(data.map((p) => ({ ...p, quantity: 1 }))),
+      )
+      .catch((err) => console.error("Ошибка загрузки последних товаров:", err));
   }, []);
 
   // Разбиваем товары по 2 в строку для grid
@@ -194,26 +193,56 @@ export default function MainPage() {
           </View>
         )}
         ListFooterComponent={
-          <View style={styles.brandsSection}>
-            <Text style={styles.brandsTitle}>Бренды кроссовок</Text>
-            <View style={styles.brandsGrid}>
-              {BRANDS.map((brand) => (
-                <TouchableOpacity
-                  key={brand}
-                  style={styles.brandBtn}
-                  activeOpacity={0.7}
-                >
-                  <Image
-                    source={{
-                      uri: `https://via.placeholder.com/200/ffffff/000000?text=${brand}`,
-                    }}
-                    style={styles.brandLogo}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-              ))}
+          <>
+            {/* Бренды */}
+            <View style={styles.brandsSection}>
+              <Text style={styles.brandsTitle}>Бренды кроссовок</Text>
+              
+              <View style={styles.brandsGrid}>
+                {brands.map((brand) => (
+                  <TouchableOpacity
+                    key={brand.id}
+                    style={styles.brandBtn}
+                    activeOpacity={0.7}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/brand/[id]",
+                        params: { id: brand.id },
+                      })
+                    }
+                  >
+                    <Image
+                      source={{ uri: `${BASE_URL}/images/${brand.image}` }}
+                      style={styles.brandLogo}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-          </View>
+
+            {/* Выбор покупателей */}
+            {latestProducts.length > 0 && (
+              <View style={styles.latestSection}>
+                <Text style={styles.latestTitle}>Выбор покупателей</Text>
+                <View style={styles.latestGrid}>
+                  {latestProducts.map((product) => (
+                    <View key={product.id} style={styles.latestCardWrapper}>
+                      <ProductCard
+                        id={product.id}
+                        image={product.image}
+                        name={product.name}
+                        description={product.description}
+                        price={product.price}
+                        quantity={product.quantity}
+                        bonus={product.bonus}
+                        onAddToCart={addToCart}
+                      />
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+          </>
         }
       />
     </SafeAreaView>
@@ -283,7 +312,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 52,
     gap: 10,
-    width: 240,
+    width: "100%",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -303,6 +332,18 @@ const styles = StyleSheet.create({
   clearBtnText: { fontSize: 18, color: "#666", lineHeight: 22 },
   noResults: { textAlign: "center", color: "#888", fontSize: 18, padding: 40 },
 
+  // Выбор покупателей
+  latestSection: { paddingHorizontal: 10, marginBottom: 16 },
+  latestTitle: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: "#000",
+    marginBottom: 16,
+    paddingHorizontal: 6,
+  },
+  latestGrid: { flexDirection: "row", flexWrap: "wrap", gap: 20 },
+  latestCardWrapper: { width: "47%" },
+
   // Grid товаров
   row: {
     flexDirection: "row",
@@ -312,29 +353,47 @@ const styles = StyleSheet.create({
   },
   cardWrapper: { flex: 1 },
 
-  // Бренды
-  brandsSection: { padding: 16, backgroundColor: "#fff", marginTop: 16 },
-  brandsTitle: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#000",
-    marginBottom: 20,
-  },
-  brandsGrid: { flexDirection: "row", flexWrap: "wrap", gap: 16 },
-  brandBtn: {
-    width: "30%",
-    aspectRatio: 1.1,
-    backgroundColor: "#fff",
-    borderWidth: 1.5,
-    borderColor: "#e8e8e8",
-    borderRadius: 28,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
-  },
-  brandLogo: { width: "78%", height: "78%" },
+// Бренды
+brandsSection: { 
+  padding: 16, 
+  marginTop: 16 
+},
+
+brandsTitle: {
+  fontSize: 24,
+  fontWeight: "800",
+  color: "#000",
+  marginBottom: 24,
+  textAlign: "center",
+},
+
+brandsGrid: { 
+  flexDirection: "row", 
+  flexWrap: "wrap", 
+  gap: 16,
+  justifyContent: "center",        
+},
+
+brandBtn: {
+  width: 110,                      
+  height: 110,                     
+  backgroundColor: "#fff",
+  borderWidth: 1.5,
+  borderColor: "#e8e8e8",
+  borderRadius: 28,
+  alignItems: "center",
+  justifyContent: "center",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.08,
+  shadowRadius: 12,
+  elevation: 3,
+  overflow: "hidden",              
+},
+
+brandLogo: { 
+  width: "75%",                    
+  height: "75%",
+  resizeMode: "contain"            
+},
 });
