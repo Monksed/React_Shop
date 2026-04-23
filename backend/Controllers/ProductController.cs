@@ -17,7 +17,7 @@ namespace ShopBackend.Controllers
             _context = context;
         }
 
-        [HttpGet("One/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetOneProduct(Guid id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);

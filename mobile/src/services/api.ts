@@ -1,40 +1,33 @@
-import { Platform } from 'react-native';
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import { BASE_URL } from "../constants/config";
 
-export const BASE_URL = Platform.select({
-  ios: 'http://localhost:5023',
-  android: 'http://10.0.2.2:5023',
+let accessToken: string | null = null;
+
+export function setAccessToken(token: string | null) {
+  accessToken = token;
+}
+
+const api: AxiosInstance = axios.create({
+  baseURL: `${BASE_URL}/api`,
+  timeout: 40000,
 });
 
-export const api = {
-  get: async <T>(path: string): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  },
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  return config;
+});
 
-  post: async <T>(path: string, body: unknown): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      setAccessToken(null);
+      throw new Error("UNAUTHORIZED");
+    }
+    throw error;
   },
+);
 
-  put: async <T>(path: string, body: unknown): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  },
-
-  delete: async <T>(path: string): Promise<T> => {
-    const res = await fetch(`${BASE_URL}${path}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  },
-};
+export default api;

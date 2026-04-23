@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useCart } from "../contexts/CartContext";
-import { BASE_URL } from "../services/api";
+import { BASE_URL } from "../constants/config";
 
 export default function CartPage() {
   const router = useRouter();

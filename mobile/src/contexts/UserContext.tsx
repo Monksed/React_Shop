@@ -3,20 +3,15 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
   ReactNode,
 } from "react";
-import { api } from "../services/api";
-
-interface User {
-  id: string;
-  fio?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-}
+import api from "../services/api";
+import { UserDTO } from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 interface UserContextType {
-  user: User | null;
+  user: UserDTO | null;
   isLoading: boolean;
   loadUser: () => Promise<void>;
 }
@@ -29,27 +24,29 @@ export const useUser = () => {
   return ctx;
 };
 
-// TODO: заменить на userId из JWT после добавления авторизации
-const USER_ID = "de4ffe00-7418-42c6-ba59-15feaf6db040";
-
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserDTO | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { isAuthenticated } = useAuth();
 
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
+    if (!isAuthenticated) {
+      setIsLoading(false);
+      return;
+    }
     try {
-      const data = await api.get<User>(`/api/User/user/${USER_ID}`);
+      const { data } = await api.get<UserDTO>("/user/me");
       setUser(data);
     } catch (error) {
       console.error("Ошибка загрузки пользователя:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isAuthenticated]);
 
   useEffect(() => {
     loadUser();
-  }, []);
+  }, [loadUser]);
 
   return (
     <UserContext.Provider value={{ user, isLoading, loadUser }}>

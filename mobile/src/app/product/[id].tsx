@@ -13,7 +13,8 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useCart } from "../../contexts/CartContext";
-import { api, BASE_URL } from "../../services/api";
+import api from "../../services/api";
+import { BASE_URL } from "../../constants/config";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SIZES = [36, 36.5, 37, 38, 39, 40, 41];
@@ -42,8 +43,8 @@ export default function ProductPage() {
 
   useEffect(() => {
     api
-      .get<any>(`/api/Product/One/${id}`)
-      .then((data) => setProduct({ ...data, quantity: 1 }))
+      .get<any>(`/Product/One/${id}`)
+      .then(({ data }) => setProduct({ ...data, quantity: 1 }))
       .catch((err) => console.error(err))
       .finally(() => setIsLoad(false));
   }, [id]);

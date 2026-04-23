@@ -15,8 +15,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../contexts/CartContext";
-import { api, BASE_URL } from "../services/api";
-import { BrandDTO } from "@/types";
+import api from "../services/api";
 
 const NEWS = [
   "Travis Scott × Jordan уже здесь",
@@ -58,8 +57,8 @@ export default function MainPage() {
 
   useEffect(() => {
     api
-      .get<any[]>("/api/Product/All")
-      .then((data) => setProducts(data.map((p) => ({ ...p, quantity: 1 }))))
+      .get<any[]>("/Product/All")
+      .then(({ data }) => setProducts(data.map((p) => ({ ...p, quantity: 1 }))))
       .catch((err) => console.error("Ошибка загрузки:", err))
       .finally(() => setIsLoad(false));
 
@@ -372,12 +371,12 @@ brandsGrid: {
   flexDirection: "row", 
   flexWrap: "wrap", 
   gap: 16,
-  justifyContent: "center",        // центрируем всю сетку
+  justifyContent: "center",        
 },
 
 brandBtn: {
-  width: 110,                      // фиксированная ширина
-  height: 110,                     // фиксированная высота — квадрат
+  width: 110,                      
+  height: 110,                     
   backgroundColor: "#fff",
   borderWidth: 1.5,
   borderColor: "#e8e8e8",
@@ -389,12 +388,12 @@ brandBtn: {
   shadowOpacity: 0.08,
   shadowRadius: 12,
   elevation: 3,
-  overflow: "hidden",              // важно!
+  overflow: "hidden",              
 },
 
 brandLogo: { 
-  width: "75%",                    // чуть уменьшил, чтобы не вылезало
+  width: "75%",                    
   height: "75%",
-  resizeMode: "contain"            // уже было, но оставляем явно
+  resizeMode: "contain"            
 },
 });

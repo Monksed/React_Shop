@@ -23,6 +23,8 @@ public partial class User
 
     public string? Phone { get; set; }
 
+    public string? PasswordHash { get; set; }
+    
     public DateTime CreateDate { get; set; }
 
     public DateTime UpdateDate { get; set; }
