@@ -20,45 +20,95 @@ public class OrderController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("order/{id}")]
-
+    // GET api/order/{id}
+    [HttpGet("{id:guid}")]
     public async Task<ActionResult<OrderDTO>> GetOrderById(Guid id)
     {
-        var order = await _context.Orders.FirstOrDefaultAsync(x => x.Id == id);
+        var order = await _context.Orders
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync(o => o.Id == id);
 
         if (order == null)
-        {
-            return NotFound(new { message = "заказ не найден" });
-        }
+            return NotFound(new { message = "Заказ не найден" });
 
-        var dto = new OrderDTO
-        {
-            Id = order.Id,
-            Status = order.Status,
-            TotalPrice = order.TotalPrice,
-            CreateDate = order.CreateDate,
-            //! ругается что Order не содержит определения Items 
-            // Items = order.Items,
-
-        };
-        return Ok(dto);
+        return Ok(MapToDTO(order));
     }
 
-    [HttpGet("All")]
-    public async Task<IActionResult> GetAllOrders()
+    // GET api/order/my/{userId}
+    [HttpGet("my/{userId:guid}")]
+    public async Task<ActionResult<List<OrderDTO>>> GetMyOrders(Guid userId)
     {
-        var listOrders = await _context.Orders
-            .Select(order => new OrderDTO
-            {
-                Id = order.Id,
-                Status = order.Status,
-                TotalPrice = order.TotalPrice,
-                CreateDate = order.CreateDate,
-                //! ругается что Order не содержит определения Items 
-                // Items = order.Items,
-            })
+        var orders = await _context.Orders
+            .Where(o => o.UserId == userId)
+            .Include(o => o.OrderItems)
             .ToListAsync();
 
-        return Ok(listOrders);
+        return Ok(orders.Select(MapToDTO));
     }
+
+    // POST api/order
+    [HttpPost("create")]
+    public async Task<ActionResult<OrderDTO>> CreateOrder([FromBody] CreateOrderDTO dto, Guid userId)
+    {
+        var order = new Order
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            Status = "в корзине",
+            CreateDate = DateTime.Now,
+            TotalPrice = dto.Items.Sum(i => i.Price * i.Quantity),
+            OrderItems = dto.Items.Select(i => new OrderItem
+            {
+                Id = Guid.NewGuid(),
+                ProductId = i.ProductId,
+                ProductName = i.ProductName,
+                Price = i.Price,
+                Quantity = i.Quantity,
+                SelectedSize = i.SelectedSize,
+                Image = i.Image,
+            }).ToList()
+        };
+
+        _context.Orders.Add(order);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, MapToDTO(order));
+    }
+
+    // DELETE api/order/{id}
+    [HttpDelete("delete/{id:guid}")]
+    public async Task<IActionResult> CancelOrder(Guid id)
+    {
+        var order = await _context.Orders
+        .Include(o => o.OrderItems)
+        .FirstOrDefaultAsync(o => o.Id == id);
+
+        if (order == null)
+            return NotFound(new { message = "Заказ не найден" });
+
+        _context.RemoveRange(order.OrderItems);
+        _context.Remove(order);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private static OrderDTO MapToDTO(Order order) => new()
+    {
+        Id = order.Id,
+        UserId = order.UserId,
+        Status = order.Status,
+        TotalPrice = order.TotalPrice,
+        CreateDate = order.CreateDate,
+        Items = order.OrderItems.Select(i => new OrderItemDTO
+        {
+            Id = i.Id,
+            ProductId = i.ProductId,
+            ProductName = i.ProductName,
+            Price = i.Price,
+            Quantity = i.Quantity,
+            SelectedSize = i.SelectedSize,
+            Image = i.Image,
+        }).ToList()
+    };
 }

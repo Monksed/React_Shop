@@ -3,6 +3,7 @@ namespace ShopBackend.DTO;
 public class OrderDTO
 {
     public Guid Id { get; set; }
+    public Guid UserId { get; set; }
     public string? Status { get; set; }
     public long TotalPrice { get; set; }
     public DateTime CreateDate { get; set; }
@@ -31,5 +32,6 @@ public class CreateOrderItemDTO
 
 public class CreateOrderDTO
 {
+    public Guid UserId { get; set; }
     public List<CreateOrderItemDTO> Items { get; set; } = new();
 }
