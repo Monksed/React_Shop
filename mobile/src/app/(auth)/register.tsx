@@ -136,36 +136,107 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f9f9f9" },
+   container: {
+    flex: 1,
+    backgroundColor: "#F5F5F5",
+  },
   keyboard: { flex: 1 },
-  scroll: { flexGrow: 1, justifyContent: "center", padding: 24 },
-  header: { marginBottom: 40 },
-  title: { fontSize: 34, fontWeight: "800", color: "#000", marginBottom: 8 },
-  subtitle: { fontSize: 16, color: "#888" },
-  form: { gap: 16 },
-  field: { gap: 8 },
-  label: { fontSize: 14, fontWeight: "600", color: "#333" },
+  scroll: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingTop: 100,
+    paddingBottom: 40,
+    justifyContent: "center",
+  },
+
+  header: {
+    marginBottom: 44,
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "800",
+    color: "#1A1A1A",
+    letterSpacing: -0.6,
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: "#888888",
+    textAlign: "center",
+    lineHeight: 21,
+  },
+
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 24,
+    padding: 26,
+    paddingBottom: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 3,
+  },
+  form: {
+    gap: 20,
+  },
+  field: {
+    gap: 8,
+  },
+  label: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#999999",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    paddingLeft: 4,
+  },
+
   input: {
-    height: 52,
-    backgroundColor: "#fff",
+    height: 54,
+    backgroundColor: "#F9F9F9",
     borderRadius: 14,
     paddingHorizontal: 18,
     fontSize: 16,
-    color: "#000",
-    borderWidth: 1.5,
-    borderColor: "#e8e8e8",
+    color: "#1A1A1A",
+    borderWidth: 1,
+    borderColor: "#EBEBEB",
   },
+
   btn: {
     height: 56,
-    backgroundColor: "#000",
-    borderRadius: 16,
+    backgroundColor: "#1A1A1A",
+    borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
   },
-  btnDisabled: { opacity: 0.6 },
-  btnText: { color: "#fff", fontSize: 17, fontWeight: "700" },
-  linkBtn: { alignItems: "center", marginTop: 8 },
-  linkText: { fontSize: 15, color: "#888" },
-  linkTextBold: { color: "#000", fontWeight: "700" },
+  btnDisabled: {
+    opacity: 0.45,
+  },
+  btnText: {
+    color: "#FFFFFF",
+    fontSize: 16.5,
+    fontWeight: "700",
+    letterSpacing: 0.2,
+  },
+
+  linkBtn: {
+    alignItems: "center",
+    marginTop: 26,
+  },
+  linkText: {
+    fontSize: 14.5,
+    color: "#999999",
+  },
+  linkTextBold: {
+    color: "#1A1A1A",
+    fontWeight: "700",
+  },
 });
