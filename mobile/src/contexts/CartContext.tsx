@@ -1,5 +1,13 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const CART_KEY = "cart_items";
 interface CartItem {
   id: number;
   name: string;
@@ -23,6 +31,23 @@ const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem(CART_KEY)
+      .then((data) => {
+        if (data) setCartItems(JSON.parse(data));
+      })
+      .catch(console.error)
+      .finally(() => setIsReady(true));
+  }, []);
+
+  useEffect(() => {
+    if (!isReady) return;
+    AsyncStorage.setItem(CART_KEY, JSON.stringify(cartItems)).catch(
+      console.error,
+    );
+  }, [cartItems, isReady]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCartItems((prev) => {

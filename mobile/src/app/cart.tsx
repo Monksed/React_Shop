@@ -46,6 +46,7 @@ export default function CartPage() {
       clearCart();
       router.replace("/order");
     } catch (e) {
+      console.log(e);
       setError("Не удалось оформить заказ. Попробуйте ещё раз.");
     } finally {
       setIsLoading(false);
