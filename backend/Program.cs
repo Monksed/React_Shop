@@ -12,8 +12,11 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddDbContext<React_ShopContext>(options =>
+builder.Services.AddDbContext<React_ShopContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default"))
 );
+
+builder.Services.AddScoped<OrderService>();
 
 builder.Services.AddScoped<OrderService>();
 
