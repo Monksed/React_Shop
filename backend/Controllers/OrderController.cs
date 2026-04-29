@@ -36,10 +36,14 @@ public class OrderController : ControllerBase
         return Ok(order);
     }
 
-    // GET api/order/my/{userId}
-    [HttpGet("my/{userId:guid}")]
-    public async Task<ActionResult<List<OrderDTO>>> GetMyOrders(Guid userId)
+    // GET api/order/my
+    [HttpGet("my")]
+    [Authorize]
+    public async Task<ActionResult<List<OrderDTO>>> GetMyOrders()
     {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userIdString == null || !Guid.TryParse(userIdString, out var userId))
+            return Unauthorized();
         var result = await _orderService.GetUserOrders(userId);
 
         if (result == null) return NotFound(new { message = "Заказы не найдены" });
@@ -49,6 +53,7 @@ public class OrderController : ControllerBase
 
     // POST api/order
     [HttpPost("create")]
+    [Authorize]
     public async Task<ActionResult<OrderDTO>> CreateOrder([FromBody] CreateOrderDTO dto)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);

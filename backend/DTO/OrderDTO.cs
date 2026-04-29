@@ -32,6 +32,5 @@ public class CreateOrderItemDTO
 
 public class CreateOrderDTO
 {
-    public Guid UserId { get; set; }
     public List<CreateOrderItemDTO> Items { get; set; } = new();
 }
