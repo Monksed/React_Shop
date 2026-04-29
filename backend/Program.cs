@@ -11,16 +11,18 @@ builder.Services.AddControllers()
         options.SerializerSettings.Converters.Add(new StringEnumConverter());
     });
 
-builder.Services.AddDbContext<React_ShopContext>(options => 
+builder.Services.AddDbContext<React_ShopContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default"))
 );
+
+builder.Services.AddScoped<OrderService>();
 
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin()      
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -33,7 +35,8 @@ app.UseRouting();
 app.UseCors("AllowFrontend");
 app.UseStaticFiles();
 
-
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
