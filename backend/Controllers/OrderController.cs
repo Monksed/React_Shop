@@ -49,7 +49,6 @@ public class OrderController : ControllerBase
 
     // POST api/order
     [HttpPost("create")]
-    [Authorize]
     public async Task<ActionResult<OrderDTO>> CreateOrder([FromBody] CreateOrderDTO dto)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
