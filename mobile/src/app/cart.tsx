@@ -105,7 +105,10 @@ export default function CartPage() {
                 {totalPrice.toLocaleString("ru-RU")} ₽
               </Text>
             </View>
-            <TouchableOpacity style={styles.checkoutBtn}>
+            <TouchableOpacity
+              style={styles.checkoutBtn}
+              onPress={() => router.push("/order")}
+            >
               <Text style={styles.checkoutText}>Оформить заказ</Text>
             </TouchableOpacity>
           </View>
