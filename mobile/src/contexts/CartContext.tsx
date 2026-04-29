@@ -6,8 +6,8 @@ import React, {
   useEffect,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "./AuthContext";
 
-const CART_KEY = "cart_items";
 interface CartItem {
   id: number;
   name: string;
@@ -30,24 +30,33 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const { userId, isAuthenticated } = useAuth();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const cartKey = userId ?? `cart_items_${userId}`;
 
   useEffect(() => {
-    AsyncStorage.getItem(CART_KEY)
+    if (!isAuthenticated || !cartKey) {
+      setCartItems([]);
+      setIsReady(false);
+      return;
+    }
+
+    setIsReady(false);
+    AsyncStorage.getItem(cartKey)
       .then((data) => {
         if (data) setCartItems(JSON.parse(data));
       })
       .catch(console.error)
       .finally(() => setIsReady(true));
-  }, []);
+  }, [cartKey, isAuthenticated]);
 
   useEffect(() => {
-    if (!isReady) return;
-    AsyncStorage.setItem(CART_KEY, JSON.stringify(cartItems)).catch(
+    if (!isReady || !cartKey) return;
+    AsyncStorage.setItem(cartKey, JSON.stringify(cartItems)).catch(
       console.error,
     );
-  }, [cartItems, isReady]);
+  }, [cartItems, isReady, cartKey]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCartItems((prev) => {
