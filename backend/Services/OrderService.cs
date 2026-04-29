@@ -31,7 +31,7 @@ public class OrderService : IOrderService
         {
             Id = Guid.NewGuid(),
             UserId = userId,
-            Status = "в корзине",
+            Status = "оформлен",
             CreateDate = DateTime.Now,
             TotalPrice = dto.Items.Sum(i => i.Price * i.Quantity),
             OrderItems = dto.Items.Select(i => new OrderItem
