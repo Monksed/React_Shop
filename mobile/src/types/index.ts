@@ -34,3 +34,32 @@ export interface BrandDTO {
   title?: string;
   image?: string;
 }
+
+export interface OrderItemDTO {
+  id: string;
+  productId: string;
+  productName: string;
+  price: number;
+  quantity: number;
+  selectedSize?: string | null;
+  image?: string | null;
+}
+export interface OrderDTO {
+  id: string;
+  status: string;
+  createDate: string;
+  totalPrice: number;
+  items: OrderItemDTO[];
+}
+
+export interface CreateOrderItemDTO {
+  productId: string;
+  productName: string;
+  quantity: number;
+  selectedSize?: string | null;
+  image?: string | null;
+}
+
+export interface CreateOrderDTO {
+  items: CreateOrderItemDTO[];
+}

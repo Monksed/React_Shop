@@ -6,7 +6,6 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
-  Image,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
@@ -18,6 +17,7 @@ import { useCart } from "../contexts/CartContext";
 import api from "../services/api";
 import { BASE_URL } from "../constants/config";
 import { BrandDTO } from "../types";
+import { Image } from "expo-image";
 
 const NEWS = [
   "Travis Scott × Jordan уже здесь",
@@ -130,6 +130,8 @@ export default function MainPage() {
                         uri: `https://via.placeholder.com/320x180/0a0a0a/ffffff?text=${i + 1}`,
                       }}
                       style={styles.newsImage}
+                      contentFit="cover"
+                      transition={200}
                     />
                     <Text style={styles.newsTitle}>{text}</Text>
                   </View>
@@ -216,6 +218,8 @@ export default function MainPage() {
                     <Image
                       source={{ uri: `${BASE_URL}/images/${brand.image}` }}
                       style={styles.brandLogo}
+                      contentFit="contain"
+                      transition={200}
                     />
                   </TouchableOpacity>
                 ))}

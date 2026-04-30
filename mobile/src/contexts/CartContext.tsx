@@ -1,7 +1,15 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "./AuthContext";
 
 interface CartItem {
-  id: number;
+  id: string;
   name: string;
   price: number;
   image: string;
@@ -13,15 +21,42 @@ interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
   addToCart: (item: Omit<CartItem, "quantity">) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   totalPrice: number;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const { userId, isAuthenticated } = useAuth();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isReady, setIsReady] = useState(false);
+  const cartKey = userId ?? `cart_items_${userId}`;
+
+  useEffect(() => {
+    if (!isAuthenticated || !cartKey) {
+      setCartItems([]);
+      setIsReady(false);
+      return;
+    }
+
+    setIsReady(false);
+    AsyncStorage.getItem(cartKey)
+      .then((data) => {
+        if (data) setCartItems(JSON.parse(data));
+      })
+      .catch(console.error)
+      .finally(() => setIsReady(true));
+  }, [cartKey, isAuthenticated]);
+
+  useEffect(() => {
+    if (!isReady || !cartKey) return;
+    AsyncStorage.setItem(cartKey, JSON.stringify(cartItems)).catch(
+      console.error,
+    );
+  }, [cartItems, isReady, cartKey]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCartItems((prev) => {
@@ -35,16 +70,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems((prev) => prev.filter((i) => i.id !== id));
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return removeFromCart(id);
     setCartItems((prev) =>
       prev.map((i) => (i.id === id ? { ...i, quantity } : i)),
     );
   };
+
+  const clearCart = () => setCartItems([]);
 
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = cartItems.reduce(
@@ -61,6 +98,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         removeFromCart,
         updateQuantity,
         totalPrice,
+        clearCart,
       }}
     >
       {children}

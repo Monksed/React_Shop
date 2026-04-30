@@ -30,6 +30,7 @@ Postgree SQL.txt
 node_modules/
 .expo/
 dist/
+android/
 web-build/
 expo-env.d.ts
 .kotlin/

@@ -11,11 +11,45 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useCart } from "../contexts/CartContext";
 import { BASE_URL } from "../constants/config";
+import api from "@/services/api";
+import { CreateOrderDTO, OrderDTO } from "@/types";
+import { useState } from "react";
 
 export default function CartPage() {
   const router = useRouter();
-  const { cartItems, removeFromCart, updateQuantity, totalPrice } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, totalPrice, clearCart } =
+    useCart();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleCheckout = async () => {
+    const dto: CreateOrderDTO = {
+      items: cartItems.map((item) => ({
+        productId: item.id,
+        productName: item.name,
+        quantity: item.quantity,
+        selectedSize: item.selectedSize ? String(item.selectedSize) : null,
+        image: item.image,
+      })),
+    };
+
+    try {
+      setIsLoading(true);
+      setError(null);
+      const { data } = await api.post<OrderDTO>("/order/create", dto);
+      clearCart();
+      router.replace({
+        pathname: "/order",
+        params: { orderId: data.id },
+      });
+    } catch (e) {
+      console.log(e);
+      setError("Не удалось оформить заказ. Попробуйте ещё раз.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   if (cartItems.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
@@ -105,11 +139,15 @@ export default function CartPage() {
                 {totalPrice.toLocaleString("ru-RU")} ₽
               </Text>
             </View>
+            {error && <Text style={styles.errorText}>{error}</Text>}
             <TouchableOpacity
-              style={styles.checkoutBtn}
-              onPress={() => router.push("/order")}
+              style={[styles.checkoutBtn, isLoading && { opacity: 0.6 }]}
+              onPress={handleCheckout}
+              disabled={isLoading}
             >
-              <Text style={styles.checkoutText}>Оформить заказ</Text>
+              <Text style={styles.checkoutText}>
+                {isLoading ? "Оформляем..." : "Оформить заказ"}
+              </Text>
             </TouchableOpacity>
           </View>
         }
@@ -228,4 +266,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   checkoutText: { color: "#fff", fontSize: 18, fontWeight: "700" },
+
+  errorText: {
+    color: "#ff3b30",
+    fontSize: 14,
+    marginBottom: 12,
+    textAlign: "center",
+  },
 });
