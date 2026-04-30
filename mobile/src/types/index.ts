@@ -55,7 +55,6 @@ export interface OrderDTO {
 export interface CreateOrderItemDTO {
   productId: string;
   productName: string;
-  price: number;
   quantity: number;
   selectedSize?: string | null;
   image?: string | null;

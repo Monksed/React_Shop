@@ -9,7 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "./AuthContext";
 
 interface CartItem {
-  id: number;
+  id: string;
   name: string;
   price: number;
   image: string;
@@ -21,8 +21,8 @@ interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
   addToCart: (item: Omit<CartItem, "quantity">) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   totalPrice: number;
   clearCart: () => void;
 }
@@ -70,11 +70,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems((prev) => prev.filter((i) => i.id !== id));
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) return removeFromCart(id);
     setCartItems((prev) =>
       prev.map((i) => (i.id === id ? { ...i, quantity } : i)),

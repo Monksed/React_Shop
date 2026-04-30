@@ -7,11 +7,12 @@ import {
   Animated,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function OrderPage() {
   const router = useRouter();
+  const { orderId } = useLocalSearchParams<{ orderId: string }>();
 
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -38,12 +39,11 @@ export default function OrderPage() {
         }),
       ]),
     ]).start();
-  }, []);
+  });
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.inner}>
-
         {/* Иконка */}
         <Animated.View
           style={[styles.iconWrapper, { transform: [{ scale: scaleAnim }] }]}
@@ -60,6 +60,10 @@ export default function OrderPage() {
           }}
         >
           <Text style={styles.title}>Ваш заказ{"\n"}оформлен</Text>
+
+          {/* Номер заказа */}
+          {orderId && <Text style={styles.orderId}>№ {orderId}</Text>}
+
           <Text style={styles.subtitle}>
             Спасибо! В ближайшее время с вами свяжется менеджер
           </Text>
@@ -68,22 +72,18 @@ export default function OrderPage() {
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
-            onPress={() => router.back()}
+            onPress={() => router.replace("/")}
           >
             <Text style={styles.buttonText}>Вернуться на главную</Text>
           </TouchableOpacity>
         </Animated.View>
-
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
+  container: { flex: 1, backgroundColor: "#f5f5f5" },
   inner: {
     flex: 1,
     alignItems: "center",
@@ -110,6 +110,11 @@ const styles = StyleSheet.create({
     color: "#000",
     textAlign: "center",
     lineHeight: 42,
+    marginBottom: 12,
+  },
+  orderId: {
+    fontSize: 14,
+    color: "#888",
     marginBottom: 12,
   },
   subtitle: {

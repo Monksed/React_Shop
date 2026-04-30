@@ -11,9 +11,8 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useCart } from "../contexts/CartContext";
 import { BASE_URL } from "../constants/config";
-import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
-import { CreateOrderDTO } from "@/types";
+import { CreateOrderDTO, OrderDTO } from "@/types";
 import { useState } from "react";
 
 export default function CartPage() {
@@ -21,18 +20,14 @@ export default function CartPage() {
   const { cartItems, removeFromCart, updateQuantity, totalPrice, clearCart } =
     useCart();
 
-  const { userId } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleCheckout = async () => {
-    if (!userId) return;
-
     const dto: CreateOrderDTO = {
       items: cartItems.map((item) => ({
-        productId: String(item.id),
+        productId: item.id,
         productName: item.name,
-        price: item.price,
         quantity: item.quantity,
         selectedSize: item.selectedSize ? String(item.selectedSize) : null,
         image: item.image,
@@ -42,9 +37,12 @@ export default function CartPage() {
     try {
       setIsLoading(true);
       setError(null);
-      await api.post(`/order/create?userId=${userId}`, dto);
+      const { data } = await api.post<OrderDTO>("/order/create", dto);
       clearCart();
-      router.replace("/order");
+      router.replace({
+        pathname: "/order",
+        params: { orderId: data.id },
+      });
     } catch (e) {
       console.log(e);
       setError("Не удалось оформить заказ. Попробуйте ещё раз.");
