@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
@@ -15,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useCart } from "../../contexts/CartContext";
 import api from "../../services/api";
 import { BASE_URL } from "../../constants/config";
+import { Image } from "expo-image";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const SIZES = [36, 36.5, 37, 38, 39, 40, 41];
@@ -89,7 +89,8 @@ export default function ProductPage() {
               key={i}
               source={{ uri: `${BASE_URL}/images/${img}` }}
               style={styles.slide}
-              resizeMode="cover"
+              contentFit="cover"
+              transition={200}
             />
           ))}
         </ScrollView>
@@ -173,6 +174,8 @@ export default function ProductPage() {
                   uri: `https://via.placeholder.com/300x200/0a0a0a/ffffff?text=Совет+${i + 1}`,
                 }}
                 style={styles.tipImage}
+                contentFit="cover"
+                transition={200}
               />
               <Text style={styles.tipTitle}>{tip}</Text>
             </View>

@@ -1,4 +1,5 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { BASE_URL } from "../constants/config";
 
@@ -35,7 +36,8 @@ export default function ProductCard({
         <Image
           source={{ uri: `${BASE_URL}/images/${image}` }}
           style={styles.image}
-          resizeMode="cover"
+          contentFit="cover"
+          transition={200}
         />
         {bonus && bonus > 0 && (
           <View style={styles.bonusBadge}>
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
-    backgroundColor: "#FF0051",   
+    backgroundColor: "#FF0051",
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 25,
